@@ -253,7 +253,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             // load 8x8 bitmaps from daxBlockId in fileName into the list bitmaps8x8 to simulate the order the bitmaps would be in memory in the game
             if (File.Exists(fileName) == false) return 0;
 
-            var file = new DaxImageFile(string.Format(fileName));
+            var file = DaxImageCache.GetDaxImageFile(string.Format(fileName));
             IReadOnlyList<Bitmap> bitmaps;
             if (file.GetBitmapDictionary().TryGetValue(daxBlockId, out bitmaps)) {
                 return bitmaps.Count();
@@ -265,7 +265,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
         private void loadBitmaps(int daxBlockId, string fileName, List<Bitmap> bitmaps8x8)
         {
             // load 8x8 bitmaps from daxBlockId in fileName into the list bitmaps8x8 to simulate the order the bitmaps would be in memory in the game
-            var file = new DaxImageFile(string.Format(fileName));
+            var file = DaxImageCache.GetDaxImageFile(string.Format(fileName));
             IReadOnlyList<Bitmap> bitmaps;
             if (file.GetBitmapDictionary().TryGetValue(daxBlockId, out bitmaps)) {
                 bitmaps8x8.AddRange(bitmaps);
