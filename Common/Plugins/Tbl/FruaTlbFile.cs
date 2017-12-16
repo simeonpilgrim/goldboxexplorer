@@ -197,7 +197,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Tbl
             string[] dungcomLocations = { "DUNGCOM.TLB", @"DEFAULT.DSN\DUNGCOM.TLB", @"DISK2\DUNGCOM.TLB", @"..\DISK2\DUNGCOM.TLB"};
             foreach (var d in dungcomLocations)
             {
-                var fp = Path.GetDirectoryName(_fullPath) + "\\" + d;
+                var fp = Path.Combine(Path.GetDirectoryName(_fullPath), d);
                 if (File.Exists(fp))
                 {
                     LoadExternalColorTable(fp);

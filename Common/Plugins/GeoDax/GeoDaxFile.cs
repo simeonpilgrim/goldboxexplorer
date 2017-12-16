@@ -34,8 +34,8 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
 
             for (int n = 0; n < 8; n++)
             {
-                var fn = path + "\\WALLDEF" + n + ".DAX";
-                if (n == 0) { fn = path + "\\WALLDEF.DAX"; }
+                var fn = Path.Combine(path, "WALLDEF" + n + ".DAX");
+                if (n == 0) { fn = Path.Combine(path + "WALLDEF.DAX"); }
                 if (System.IO.File.Exists(fn))
                 {
                     var dwf = new DaxWallDefFile(fn);
@@ -65,8 +65,8 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             var path = Path.GetDirectoryName(file);
             var diskNumber = filename.Substring(3, 1);
             var eclFileName = "ECL" + diskNumber + ".DAX";
-            _daxEclFile = new DaxEcl.DaxEclFile(path + "\\" + eclFileName);
-           // _daxWallDefFiles.Add(new DaxWallDefFile(path + "\\WALLDEF" + diskNumber + ".DAX"));
+            _daxEclFile = DaxEclCache.GetEclFile(Path.Combine(path, eclFileName));
+
             foreach (var block in _daxEclFile.Blocks)
             {
                 // scan for the load file geo command, which consists of the pattern 0x21 a 0x00 where a is the geo id to load

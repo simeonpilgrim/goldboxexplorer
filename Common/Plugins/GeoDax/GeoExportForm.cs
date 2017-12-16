@@ -51,22 +51,19 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
                 else if (formatJpg.Checked) exportFormat = ImageFormat.Jpeg;
 
 
-                    Bitmap bitmap = (Bitmap) _picturebox.Image;
-                           var outputFilename = string.Format(@"{0}\\{1}.{2}",
-                                                        targetFolder, _mapName,
-                                                         exportFormat.ToString().ToLower());
+                Bitmap bitmap = (Bitmap)_picturebox.Image;
+                var outputFilename = Path.Combine(targetFolder, $"{_mapName}.{exportFormat.ToString().ToLower()}");
 
-                           var bm32bpp = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
-                           using (var g = Graphics.FromImage(bm32bpp)) {
-                                g.DrawImage(bitmap, 0, 0);
-                                bm32bpp.Save(outputFilename, exportFormat);
-                            }
-
-
+                var bm32bpp = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
+                using (var g = Graphics.FromImage(bm32bpp))
+                {
+                    g.DrawImage(bitmap, 0, 0);
+                    bm32bpp.Save(outputFilename, exportFormat);
+                }
 
                 Hide();
 
-                MessageBox.Show(string.Format("Exported {0} images as {1} to {2}", 
+                MessageBox.Show(string.Format("Exported {0} images as {1} to {2}",
                     1, exportFormat.ToString().ToUpper(), targetFolder));
             }
         }

@@ -190,16 +190,16 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             }
             return wallSetBitmaps;
         }
+
         string getUniversalTileFileName(string fileName)
         {
             // the universal 8x8's always seem to be in the first 8x8d file
 
             string fn = "";
-            fn = Path.GetDirectoryName(fileName) + "\\8x8d1.dax";
+            fn = Path.Combine(Path.GetDirectoryName(fileName), "8x8d1.dax");
             if (getBitmapCount(203, fn) == 0)
             {
-                fn = Path.GetDirectoryName(fileName) + "\\8x8d.dax";
-
+                fn = Path.Combine(Path.GetDirectoryName(fileName), "8x8d.dax");
             }
 
             return fn;
