@@ -1,12 +1,8 @@
-using System;
-
-
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Collections.Generic;
-using System.Diagnostics;
+
 
 namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
@@ -260,17 +256,9 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             var file = new DaxImageFile(fileName);
             foreach (DaxFileBlock block in file.Blocks)
             {
-
                 if (block.Id == daxBlockId)
                 {
-                    var parameters = new FileBlockParameters
-                    {
-                        Data = block.Data,
-                        Name = block.File,
-                        Id = block.Id,
-                    };
-
-                    var render = new RenderBlockFactory().CreateUsing(parameters);
+					var render = new RenderBlockFactory().CreateUsing(block);
 
                     var x = render.GetBitmaps().Count();
                     return x;
@@ -287,16 +275,9 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             var file = new DaxImageFile(string.Format(fileName));
             foreach (DaxFileBlock block in file.Blocks)
             {
-
                 if (block.Id == daxBlockId)
                 {
-                    var parameters = new FileBlockParameters
-                    {
-                        Data = block.Data,
-                        Name = block.File,
-                        Id = block.Id,
-                    };
-                    var render = new RenderBlockFactory().CreateUsing(parameters);
+                    var render = new RenderBlockFactory().CreateUsing(block);
                     foreach (var bitmap in render.GetBitmaps())
                     {
                         bitmaps8x8.Add(bitmap);

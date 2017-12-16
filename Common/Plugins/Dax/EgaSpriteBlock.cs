@@ -5,11 +5,11 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class EgaSpriteBlock : RenderBlock
     {
-        public EgaSpriteBlock(FileBlockParameters parameters)
+        public EgaSpriteBlock(DaxFileBlock block)
         {
-            var data = parameters.Data;
+            var data = block.Data;
 
-            setBlockId(parameters.Id);
+            setBlockId(block.Id);
             uint frames = data[0];
             int offset = 1;
             if (frames > 8)
@@ -21,7 +21,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
                 clrs[i] = Color.FromArgb((int)EgaVgaPalette.EgaColors[i]);
             }
 
-            var filename = Path.GetFileName(parameters.Name).ToUpper();
+            var filename = block.FileNameUpperCase;
             bool xorFrames = filename.StartsWith("PIC", true, System.Globalization.CultureInfo.CurrentCulture);
             xorFrames |= filename.StartsWith("FINAL", true, System.Globalization.CultureInfo.CurrentCulture);
 

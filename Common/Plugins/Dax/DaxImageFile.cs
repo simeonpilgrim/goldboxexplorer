@@ -15,17 +15,10 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 
         protected override sealed void ProcessBlocks()
         {
-            foreach (var renderBlock in Blocks.Select(
-                fileBlock => new FileBlockParameters
-
-                                 {
-                                     Data = fileBlock.Data,
-                                     Name = fileBlock.File,
-                                     Id = fileBlock.Id,
-                                 }).Select(parameters => new RenderBlockFactory().CreateUsing(parameters)))
+            foreach (var block in Blocks) 
             {
+                var renderBlock = new RenderBlockFactory().CreateUsing(block);
 
-  
                 foreach (var bitmap in renderBlock.GetBitmaps())
                 {
                     _bitmaps.Add(bitmap);
@@ -33,8 +26,6 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
                 }
             }
         }
-
-
    
 
         public IList<Bitmap> GetBitmaps()
@@ -45,6 +36,5 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
         {
             return _bitmapIds.AsReadOnly();
         }
-
     }
 }

@@ -89,14 +89,7 @@ namespace GoldBoxExplorer
                 /*
                 foreach (DaxFileBlock block in file.Blocks)
                 {
-                    var parameters = new FileBlockParameters
-                                         {
-                                             Data = block.Data,
-                                             Name = block.File,
-                                             Id = block.Id,
-                                         };
-
-                    var render = new RenderBlockFactory().CreateUsing(parameters);
+                    var render = new RenderBlockFactory().CreateUsing(block);
                     if (block.File.ToUpper().Contains("WALLDEF")) 
                         render = new DaxWallDefFile(block.File, block.Id);
                     var bitmapCounter = 0;

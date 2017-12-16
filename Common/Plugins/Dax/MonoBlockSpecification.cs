@@ -4,10 +4,10 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class MonoBlockSpecification : IFileBlockSpecification
     {
-        public bool IsSatisfiedBy(FileBlockParameters parameters)
+        public bool IsSatisfiedBy(DaxFileBlock block)
         {
-            return (parameters.Data.Length%8) == 0 &&
-                   (Path.GetFileName(parameters.Name).ToUpper().StartsWith("8X8"));
+            return (block.Data.Length%8) == 0 &&
+                   (block.FileNameUpperCase.StartsWith("8X8"));
         }
     }
 }

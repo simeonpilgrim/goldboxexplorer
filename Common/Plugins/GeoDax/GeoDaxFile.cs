@@ -498,7 +498,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
         {
             var mapname = block.Id.ToString();
 
-            var game = FileHelper.DetermineGameFrom(block.File);
+            var game = FileHelper.DetermineGameFrom(block.FullFileName);
             if (game != FileHelper.GameList.Unknown)
             {
                 // do we have a map with that id?

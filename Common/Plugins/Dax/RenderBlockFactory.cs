@@ -2,28 +2,28 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class RenderBlockFactory
     {
-        public IRenderBlock CreateUsing(FileBlockParameters parameters)
+        public IRenderBlock CreateUsing(DaxFileBlock block)
         {
-            if (new EgaSpriteBlockSpecification().IsSatisfiedBy(parameters))
-                return new EgaSpriteBlock(parameters);
+            if (new EgaSpriteBlockSpecification().IsSatisfiedBy(block))
+                return new EgaSpriteBlock(block);
 
-            if (new VgaStrataBlockSpecification().IsSatisfiedBy(parameters))
-                return new VgaStrataBlock(parameters);
+            if (new VgaStrataBlockSpecification().IsSatisfiedBy(block))
+                return new VgaStrataBlock(block);
 
-            if (new VgaSpriteBlockSpecification().IsSatisfiedBy(parameters))
-                return new VgaSpriteBlock(parameters);
+            if (new VgaSpriteBlockSpecification().IsSatisfiedBy(block))
+                return new VgaSpriteBlock(block);
 
-            if (new VgaMixedBlockSpecification().IsSatisfiedBy(parameters))
-                return new VgaMixedBlock(parameters);
+            if (new VgaMixedBlockSpecification().IsSatisfiedBy(block))
+                return new VgaMixedBlock(block);
 
-            if (new VgaBlockSpecification().IsSatisfiedBy(parameters))
-                return new VgaBlock(parameters);
+            if (new VgaBlockSpecification().IsSatisfiedBy(block))
+                return new VgaBlock(block);
 
-            if (new EgaBlockSpecification().IsSatisfiedBy(parameters))
-                return new EgaBlock(parameters);
+            if (new EgaBlockSpecification().IsSatisfiedBy(block))
+                return new EgaBlock(block);
 
-            if (new MonoBlockSpecification().IsSatisfiedBy(parameters))
-                return new MonoBlock(parameters);
+            if (new MonoBlockSpecification().IsSatisfiedBy(block))
+                return new MonoBlock(block);
 
             return new UnknownBlock();
         }

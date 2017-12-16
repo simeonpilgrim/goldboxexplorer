@@ -2,9 +2,9 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class VgaBlockSpecification : IFileBlockSpecification
     {
-        public bool IsSatisfiedBy(FileBlockParameters parameters)
+        public bool IsSatisfiedBy(DaxFileBlock block)
         {
-            var data = parameters.Data;
+            var data = block.Data;
 
             if (data.Length < 20)
                 return false;

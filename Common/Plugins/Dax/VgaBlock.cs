@@ -5,11 +5,11 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class VgaBlock : RenderBlock
     {
-        public VgaBlock(FileBlockParameters parameters)
+        public VgaBlock(DaxFileBlock block)
         {
-            setBlockId(parameters.Id);
+            setBlockId(block.Id);
 
-            var data = parameters.Data;
+            var data = block.Data;
 
             int height = data[0];
             int width = data[1];

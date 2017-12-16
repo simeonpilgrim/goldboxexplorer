@@ -6,11 +6,11 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class VgaMixedBlock : RenderBlock
     {
-        public VgaMixedBlock(FileBlockParameters parameters)
+        public VgaMixedBlock(DaxFileBlock block)
         {
-            setBlockId(parameters.Id);
+            setBlockId(block.Id);
 
-            var data = parameters.Data;
+            var data = block.Data;
             var origData = data;
 
             if (data.Length < 5)
@@ -257,10 +257,5 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 
             return clrs;
         }
-
-        //private static ushort ArrayToUshort(IList<byte> data, int offset)
-        //{
-        //    return (ushort)(data[offset + 0] + (data[offset + 1] << 8));
-        //}
     }
 }

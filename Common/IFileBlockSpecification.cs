@@ -4,6 +4,6 @@ namespace GoldBoxExplorer.Lib
 {
     public interface IFileBlockSpecification
     {
-        bool IsSatisfiedBy(FileBlockParameters parameters);
+        bool IsSatisfiedBy(DaxFileBlock block);
     }
 }

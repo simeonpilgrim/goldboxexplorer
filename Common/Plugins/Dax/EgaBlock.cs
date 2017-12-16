@@ -8,10 +8,10 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
     {
         private uint[] EgaColors;
         private bool isCombatPicture = false; // images used in combat mode have a slightly different EGA palette (colors 0 and 8 are swapped)
-        public EgaBlock(FileBlockParameters parameters)
+        public EgaBlock(DaxFileBlock block)
         {
-            setBlockId(parameters.Id);
-            var data = parameters.Data;
+            setBlockId(block.Id);
+            var data = block.Data;
             uint height = ArrayToUshort(data, 0);
             uint width = ArrayToUshort(data, 2);
             uint xPos = ArrayToUshort(data, 4);
@@ -25,7 +25,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             var egaDataSize = height * width * 4;
             EgaColors = EgaVgaPalette.EgaColors;
 
-            var filename = Path.GetFileName(parameters.Name).ToUpper();
+            var filename = block.FileNameUpperCase;
             if (filename.Contains("CPIC") || filename.Contains("CHEAD") || filename.Contains("CBODY")
                 || filename.Contains("DUNGCOM") || filename.Contains("WILDCOM") || filename.Contains("RANDCOM")
                 || filename.Contains("COMSPR"))

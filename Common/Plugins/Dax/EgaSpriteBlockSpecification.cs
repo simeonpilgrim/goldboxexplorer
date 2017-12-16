@@ -4,9 +4,9 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class EgaSpriteBlockSpecification : IFileBlockSpecification
     {
-        public bool IsSatisfiedBy(FileBlockParameters parameters)
+        public bool IsSatisfiedBy(DaxFileBlock block)
         {
-            var data = parameters.Data;
+            var data = block.Data;
             int frames = data[0];
 
             int offset = 1;

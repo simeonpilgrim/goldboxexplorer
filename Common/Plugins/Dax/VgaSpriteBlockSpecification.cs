@@ -5,9 +5,9 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class VgaSpriteBlockSpecification : IFileBlockSpecification
     {
-        public bool IsSatisfiedBy(FileBlockParameters parameters)
+        public bool IsSatisfiedBy(DaxFileBlock block)
         {
-            var data = parameters.Data;
+            var data = block.Data;
             var origData = data;
 
             if (data.Length < 20)
@@ -36,7 +36,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 
             var dataStart = (clrCount*3) + 132 + (3*frames);
 
-            if (Path.GetFileName(parameters.Name).ToUpper().StartsWith("SPRIT") && clrBase == 176 && clrCount == 80)
+            if (block.FileNameUpperCase.StartsWith("SPRIT") && clrBase == 176 && clrCount == 80)
             {
                 dataStart = 306;    
             }

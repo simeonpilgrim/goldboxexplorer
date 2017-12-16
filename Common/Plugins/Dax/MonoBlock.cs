@@ -5,12 +5,12 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class MonoBlock : RenderBlock
     {
-        public MonoBlock(FileBlockParameters parameters)
+        public MonoBlock(DaxFileBlock block)
         {
-            setBlockId(parameters.Id);
+            setBlockId(block.Id);
 
             int[] monoBitMask = { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 }; 
-            var count = parameters.Data.Length / 8;
+            var count = block.Data.Length / 8;
 
             for (var ch = 0; ch < count; ch++)
             {
@@ -20,7 +20,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
                 {
                     for (var x = 0; x < 8; x++)
                     {
-                        var b = parameters.Data[(ch * 8) + y];
+                        var b = block.Data[(ch * 8) + y];
                         var c = ((b & monoBitMask[x]) != 0) ? Color.White : Color.Black;
                         bitmap.SetPixel(x, y, c);
                     }

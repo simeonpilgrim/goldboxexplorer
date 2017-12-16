@@ -6,10 +6,10 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class VgaSpriteBlock : RenderBlock
     {
-        public VgaSpriteBlock(FileBlockParameters parameters)
+        public VgaSpriteBlock(DaxFileBlock block)
         {
-            setBlockId(parameters.Id);
-            var data = parameters.Data;
+            setBlockId(block.Id);
+            var data = block.Data;
             var origData = data;
 
             int height = data[0];
@@ -25,7 +25,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             var clrs = EgaVgaPalette.ExtractPalette(origData, clrCount, clrBase, 11);
             var dataStart = (clrCount * 3) + 132 + (3 * frames);
 
-            if (Path.GetFileName(parameters.Name).ToUpper().StartsWith("SPRIT"))
+            if (block.FileNameUpperCase.StartsWith("SPRIT"))
             {
                 clrs[0] = Color.FromArgb(0);
                 clrs[13] = Color.FromArgb(0, 0, 0);

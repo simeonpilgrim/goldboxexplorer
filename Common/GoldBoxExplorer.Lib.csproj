@@ -92,7 +92,6 @@
     <Compile Include="Plugins\Dax\EgaSpriteBlock.cs" />
     <Compile Include="Plugins\Dax\EgaSpriteBlockSpecification.cs" />
     <Compile Include="Plugins\Dax\EgaVgaPalette.cs" />
-    <Compile Include="Plugins\Dax\FileBlockParameters.cs" />
     <Compile Include="Plugins\Dax\IRenderBlock.cs" />
     <Compile Include="Plugins\Dax\MonoBlock.cs" />
     <Compile Include="Plugins\Dax\MonoBlockSpecification.cs" />

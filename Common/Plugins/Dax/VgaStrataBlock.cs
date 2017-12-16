@@ -5,11 +5,11 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class VgaStrataBlock : RenderBlock
     {
-        public VgaStrataBlock(FileBlockParameters parameters)
+        public VgaStrataBlock(DaxFileBlock block)
         {
-            setBlockId(parameters.Id);
+            setBlockId(block.Id);
 
-            var data = parameters.Data;
+            var data = block.Data;
             int height = ArrayToUshort(data, 0);
             int width = ArrayToUshort(data, 2);
             int xPos = ArrayToUshort(data, 4);
