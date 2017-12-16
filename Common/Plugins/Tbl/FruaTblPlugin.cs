@@ -23,11 +23,9 @@ namespace GoldBoxExplorer.Lib.Plugins.Tbl
         public IGoldBoxViewer Viewer { get; set; }
 
         public bool IsImageFile() { return true; }
-        public IEnumerable<Bitmap> GetBitmaps()
-        {
-            _file.LoadBitmaps();
-            return _file.Bitmaps;
+
+        public IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> GetBitmapDictionary() {
+            return null;
         }
-        public IList<int> GetBitmapIds() { return null; }
     }
 }

@@ -24,18 +24,16 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             var displayBorder = filename != null && filename.ToUpper().StartsWith("SPRIT");
 
             _file = new DaxImageFile(args.Filename);
-            Viewer = new DaxImageViewer(_file.GetBitmaps(), args.Zoom, args.ContainerWidth, display35ImagesPerRow, displayBorder, _file.GetBitmapIds());
+            Viewer = new DaxImageViewer(_file.GetBitmapDictionary(), args.Zoom, args.ContainerWidth, display35ImagesPerRow, displayBorder);
             return this;
         }
 
         public IGoldBoxViewer Viewer { get; set; }
 
         public bool IsImageFile() { return true; }
-        public IEnumerable<Bitmap> GetBitmaps()
-        {
-            return _file.GetBitmaps();
-        }
-        public IList<int> GetBitmapIds() { return _file.GetBitmapIds(); }
 
+        public IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> GetBitmapDictionary() {
+            return _file.GetBitmapDictionary();
+        }
     }
 }

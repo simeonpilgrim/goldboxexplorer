@@ -31,7 +31,8 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 
         public bool IsImageFile() { return true; }
 
-        public IEnumerable<Bitmap> GetBitmaps() { return _file.GetBitmaps(); }
-        public IList<int> GetBitmapIds() { return _file._bitmapIds; }
+        public IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> GetBitmapDictionary() {
+            return null;
+        }
     }
 }

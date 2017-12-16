@@ -6,7 +6,6 @@ namespace GoldBoxExplorer.Lib.Plugins.Glb
 {
     public class FruaGlbPlugin : IPlugin
     {
-        public IList<int> GetBitmapIds() { return null; }
         public bool IsSatisifedBy(string path)
         {
             var filename = Path.GetFileName(path);
@@ -36,13 +35,11 @@ namespace GoldBoxExplorer.Lib.Plugins.Glb
         }
 
         public IGoldBoxViewer Viewer { get; set; }
-
         public bool IsImageFile() { return true; }
-        public IEnumerable<Bitmap> GetBitmaps()
-        {
+
+        public IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> GetBitmapDictionary() {
             return null;
         }
-
 
     }
 }

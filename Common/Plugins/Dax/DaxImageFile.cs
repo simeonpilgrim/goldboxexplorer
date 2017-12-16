@@ -6,8 +6,8 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class DaxImageFile : DaxFile
     {
-        private readonly List<Bitmap> _bitmaps = new List<Bitmap>();
-        private readonly List<int> _bitmapIds = new List<int>();
+        private readonly Dictionary<int, IReadOnlyList<Bitmap>> _bitmaps_dic = new Dictionary<int, IReadOnlyList<Bitmap>>();
+
         public DaxImageFile(string file) : base(file)
         {
             ProcessBlocks();
@@ -19,22 +19,13 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             {
                 var renderBlock = new RenderBlockFactory().CreateUsing(block);
 
-                foreach (var bitmap in renderBlock.GetBitmaps())
-                {
-                    _bitmaps.Add(bitmap);
-                    _bitmapIds.Add(renderBlock.getBlockId());
-                }
+                _bitmaps_dic.Add(block.Id, renderBlock.GetBitmaps().ToList());
             }
         }
    
+        public IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> GetBitmapDictionary() {
+            return _bitmaps_dic;
+        }
 
-        public IList<Bitmap> GetBitmaps()
-        {
-            return _bitmaps.AsReadOnly();
-        }
-        public IList<int> GetBitmapIds()
-        {
-            return _bitmapIds.AsReadOnly();
-        }
     }
 }

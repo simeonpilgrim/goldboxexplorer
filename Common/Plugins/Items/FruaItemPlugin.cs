@@ -22,11 +22,9 @@ namespace GoldBoxExplorer.Lib.Plugins.Items
         public IGoldBoxViewer Viewer { get; set; }
 
         public bool IsImageFile() { return true; }
-        public IList<int> GetBitmapIds() { return null; }
-        public IEnumerable<Bitmap> GetBitmaps()
-        {
+
+        public IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> GetBitmapDictionary() {
             return null;
         }
-
     }
 }

@@ -39,8 +39,7 @@ namespace GoldBoxExplorer
 
         private void button2_Click(object sender, EventArgs e)
         {
-            using (new WaitCursor())
-            {
+            using (new WaitCursor()) {
                 var targetFolder = textBox1.Text;
                 var exportCount = 0;
 
@@ -48,65 +47,38 @@ namespace GoldBoxExplorer
                 if (formatBmp.Checked) exportFormat = ImageFormat.Bmp;
                 else if (formatJpg.Checked) exportFormat = ImageFormat.Jpeg;
 
-                       var filename = String.Format(@"{0}\{1}", _FileDirectory, _filename);
-                       IPlugin plugin = _plugin;
-/*                       IPlugin plugin = PluginFactory.CreateUsing(new PluginParameter
-                       {
-                           Zoom = 1,
-                           ContainerWidth = 0, //view.GetViewerWidth(),
-                           Filename = filename,
-                       });*/
-                       if (plugin == null) return;
-                       if (!plugin.IsImageFile()) return;
-                       //_view.DisplayBlock(_plugin.Viewer.GetControl());
-                       
-                //var file = new DaxImageFile(string.Format(@"{0}\{1}", _FileDirectory, _filename));
+                var filename = String.Format(@"{0}\{1}", _FileDirectory, _filename);
+                IPlugin plugin = _plugin;
 
-                       int bitmapCounter = 0;
+                if (plugin == null) return;
+                if (!plugin.IsImageFile()) return;
 
-                       var blockIds = plugin.GetBitmapIds();
-                       foreach (var bitmap in plugin.GetBitmaps())
-                       {
+                int bitmapCounter = 0;
 
-                           int blockId = 0;
-                           if (blockIds != null) 
-                               blockId = blockIds[bitmapCounter];
-                           var outputFilename = string.Format(@"{0}\{1}_{2}_{3}.{4}",
-                                                        targetFolder, _filename.TrimEnd(".dax".ToCharArray()),
-                                                        blockId, bitmapCounter++, exportFormat.ToString().ToLower());
+                foreach(var b in plugin.GetBitmapDictionary()) {
+                    var blockId = b.Key;
+                    var bitmaps = b.Value;
 
-                    //       bitmap.Save(outputFilename, exportFormat);
-                           var bm32bpp = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
-                           //  var brush = new SolidBrush(Color.FromArgb(103, 247, 159));
-                           using (var g = Graphics.FromImage(bm32bpp)) {
-                               g.Clear(Color.FromArgb(103, 247, 159));
-                                g.DrawImage(bitmap, 0, 0);
-                                bm32bpp.Save(outputFilename, exportFormat);
-                            }
-
-                           exportCount++;
-                       }
-                /*
-                foreach (DaxFileBlock block in file.Blocks)
-                {
-                    var render = new RenderBlockFactory().CreateUsing(block);
-                    if (block.File.ToUpper().Contains("WALLDEF")) 
-                        render = new DaxWallDefFile(block.File, block.Id);
-                    var bitmapCounter = 0;
-
-                    foreach (var bitmap in render.GetBitmaps())
-                    {
-                        var filename = string.Format(@"{0}\{1}_{2}_{3}.{4}",
+                    foreach(var bitmap in bitmaps) {
+                        var outputFilename = string.Format(@"{0}\{1}_{2}_{3}.{4}",
                                                      targetFolder, _filename.TrimEnd(".dax".ToCharArray()),
-                                                     block.Id, bitmapCounter++, exportFormat.ToString().ToLower());
-                        bitmap.Save(filename, exportFormat);
+                                                     blockId, bitmapCounter++, exportFormat.ToString().ToLower());
+
+                        var bm32bpp = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
+
+                        using (var g = Graphics.FromImage(bm32bpp)) {
+                            g.Clear(Color.FromArgb(103, 247, 159));
+                            g.DrawImage(bitmap, 0, 0);
+                            bm32bpp.Save(outputFilename, exportFormat);
+                        }
+
                         exportCount++;
                     }
-                }*/
+                }
 
                 Hide();
 
-                MessageBox.Show(string.Format("Exported {0} images as {1} to {2}", 
+                MessageBox.Show(string.Format("Exported {0} images as {1} to {2}",
                     exportCount, exportFormat.ToString().ToUpper(), targetFolder));
             }
         }

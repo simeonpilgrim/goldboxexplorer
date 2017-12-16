@@ -8,18 +8,17 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
     public class DaxImageViewer : IGoldBoxViewer
     {
         public event EventHandler<ChangeFileEventArgs> ChangeSelectedFile;
-        private readonly IList<Bitmap> _bitmaps;
-        private readonly IList<int> _bitmapIds;
+        private readonly IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> _bitmaps;
+
         private readonly bool _display35ImagesPerRow;
         private readonly bool _displayBorder;
         private readonly PictureBox _pictureBox;
 
-        public DaxImageViewer(IList<Bitmap> bitmaps, float zoom, int containerWidth, bool display35ImagesPerRow, bool displayBorder, IList<int> bitmapIds)
+        public DaxImageViewer(IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> bitmaps, float zoom, int containerWidth, bool display35ImagesPerRow, bool displayBorder)
         {
             Zoom = zoom;
             ContainerWidth = containerWidth;
             _bitmaps = bitmaps;
-            _bitmapIds = bitmapIds;
             _display35ImagesPerRow = display35ImagesPerRow;
             _displayBorder = displayBorder;
             _pictureBox = new PictureBox();
@@ -46,42 +45,40 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             var font = new Font("Courier New", fontSize);
             var brush = new SolidBrush(Color.FromArgb(85, 85, 85));
             int padding = fontSize * 3;
+            int i = 0;
+            foreach (var entry in _bitmaps) {
+                var currentId = entry.Key;
 
-            for (int i = 0; i < bitmapCount; i++)
-            {
-                var currentImage = _bitmaps[i];
-                var currentId = _bitmapIds[i];
-                lastImageHeight = (int) Math.Max(lastImageHeight, currentImage.Height*Zoom);
+                foreach(var currentImage in entry.Value) {
 
-                var newRow = false;
+                    lastImageHeight = (int)Math.Max(lastImageHeight, currentImage.Height * Zoom);
 
-                if (_display35ImagesPerRow)
-                {
-                    if (i > 0 && i%35 == 0)
-                        newRow = true;
+                    var newRow = false;
+
+                    if (_display35ImagesPerRow) {
+                        if (i > 0 && i % 35 == 0)
+                            newRow = true;
+                    } else {
+                        if (x + ((padding + currentImage.Width) * Zoom) > ContainerWidth)
+                            newRow = true;
+                    }
+
+                    if (newRow) {
+                        x = 0;
+                        var ypad = (int)(padding * Zoom / 2);
+                        y += lastImageHeight + ypad;
+                        if (i < bitmapCount - 1) lastImageHeight = 0;
+                    }
+
+                    e.Graphics.DrawImage(currentImage, x, y, currentImage.Width * Zoom, currentImage.Height * Zoom);
+                    e.Graphics.DrawString(currentId.ToString(), font, brush, x + (currentImage.Width * Zoom), y);
+                    if (_displayBorder) {
+                        e.Graphics.DrawRectangle(pen, x, y, currentImage.Width * Zoom, currentImage.Height * Zoom);
+                    }
+
+                    x += (int)((currentImage.Width + padding) * Zoom);
+                    i++;
                 }
-                else
-                {
-                    if (x + ((padding + currentImage.Width)*Zoom) > ContainerWidth)
-                        newRow = true;
-                }
-
-                if(newRow)
-                {
-                    x = 0;
-                    var ypad = (int) (padding*Zoom/2);
-                    y += lastImageHeight + ypad;
-                    if (i < bitmapCount - 1) lastImageHeight = 0;
-                }
-
-                e.Graphics.DrawImage(currentImage, x, y, currentImage.Width*Zoom, currentImage.Height*Zoom);
-                e.Graphics.DrawString(currentId.ToString(), font, brush, x + (currentImage.Width*Zoom),y);
-                if (_displayBorder)
-                {
-                    e.Graphics.DrawRectangle(pen, x, y, currentImage.Width*Zoom, currentImage.Height*Zoom);
-                }
-
-                x += (int) ((currentImage.Width + padding)*Zoom);
             }
 
             _pictureBox.Width = ContainerWidth;
