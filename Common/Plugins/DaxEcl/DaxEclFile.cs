@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GoldBoxExplorer.Lib.Plugins.Dax;
-//using GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump;
 
 namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
 {
@@ -28,7 +27,6 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
             }
             foreach (var blockStrings in Blocks.Select(daxFileBlock => DecompressEclText(daxFileBlock.Data)))
             {
-
                 _strings.AddRange(blockStrings);
             }
         }

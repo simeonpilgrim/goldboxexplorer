@@ -2,8 +2,7 @@ using System;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Windows.Forms;
-using GoldBoxExplorer.Lib;
-using GoldBoxExplorer.Lib.Plugins;
+using System.IO;
 
 //namespace GoldBoxExplorer
 namespace GoldBoxExplorer.Lib.Plugins.GeoDax
@@ -19,7 +18,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             InitializeComponent();
         }
 
-        public GeoExportForm(PictureBox picturebox,  string mapName = "")
+        public GeoExportForm(PictureBox picturebox, string mapName = "")
             : this()
         {
 
