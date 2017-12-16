@@ -72,6 +72,7 @@
     <Compile Include="Plugins\Character\FruaCharacterFile.cs" />
     <Compile Include="Plugins\Character\FruaCharacterPlugin.cs" />
     <Compile Include="Plugins\Character\FruaCharacterViewer.cs" />
+    <Compile Include="Plugins\DaxEcl\DaxEclCache.cs" />
     <Compile Include="Plugins\Dax\DaxImageCache.cs" />
     <Compile Include="Plugins\FileHelper.cs" />
     <Compile Include="Plugins\DaxEcl\Commands.cs" />

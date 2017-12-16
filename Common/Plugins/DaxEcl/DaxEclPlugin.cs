@@ -16,7 +16,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
 
         public IPlugin CreateUsing(PluginParameter args)
         {
-            var file = new DaxEclFile(args.Filename);
+            var file = DaxEclCache.GetEclFile(args.Filename);
             Viewer = new EclFileViewer(file);
             return this;
         }
