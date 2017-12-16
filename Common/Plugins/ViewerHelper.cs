@@ -5,37 +5,37 @@ namespace GoldBoxExplorer.Lib.Plugins
 {
     public static class ViewerHelper
     {
+        static readonly Font normalFont = new Font("Courier New", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+
         public static Control CreateTextBox(bool readonlystatus = true)
         {
-            var control = new TextBox
-            {
-              Dock = DockStyle.Left,
-           // Anchor = AnchorStyles.Left,
-       //         Top = 0,
-       //         Left = 0,
-          //      Multiline = true,
-               // ReadOnly = readonlystatus,
+            var control = new TextBox {
+                Dock = DockStyle.Left,
+                //Anchor = AnchorStyles.Left,
+                //Top = 0,
+                //Left = 0,
+                //Multiline = true,
+                //ReadOnly = readonlystatus,
                 ReadOnly = true,
                 BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D,
-                Font = new Font("Courier New", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0),
-         //       ScrollBars = ScrollBars.Both,
+                Font = normalFont,
+                //ScrollBars = ScrollBars.Both,
             };
-
             return control;
         }
+
         public static Control CreateTextBoxMultiline(bool readonlystatus = true)
         {
-            var control = new TextBox
-            {
+            var control = new TextBox {
                 Dock = DockStyle.Fill,
-                // Anchor = AnchorStyles.Left,
-                //         Top = 0,
-                //         Left = 0,
+                //Anchor = AnchorStyles.Left,
+                //Top = 0,
+                //Left = 0,
                 Multiline = true,
-                // ReadOnly = readonlystatus,
+                //ReadOnly = readonlystatus,
                 ReadOnly = true,
                 BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D,
-                Font = new Font("Courier New", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0),
+                Font = normalFont,
                 ScrollBars = ScrollBars.Both,
             };
 
@@ -51,7 +51,7 @@ namespace GoldBoxExplorer.Lib.Plugins
                 Left = 0,
                 Height = 20,
                 Width = 200,
-                Font = new Font("Courier New", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0),
+                Font = normalFont,
             };
 
             return control;
@@ -63,7 +63,7 @@ namespace GoldBoxExplorer.Lib.Plugins
                 Dock = DockStyle.Fill,
                 Top = 0,
                 Left = 0,
-                Font = new Font("Courier New", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0),
+                Font = normalFont,
                 AutoScroll = true,
             };
 
@@ -80,7 +80,7 @@ namespace GoldBoxExplorer.Lib.Plugins
                 Height = 24,
                 BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D,
 
-                Font = new Font("Courier New", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0),
+                Font = normalFont,
             };
 
             return control;

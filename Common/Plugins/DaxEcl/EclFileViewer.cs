@@ -113,6 +113,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
             Panel codePanel = (Panel)page.Controls.Find("codepanel", false)[0];
             EclDump.EclDump ecl = (EclDump.EclDump) codePanel.Tag;
             // decode ecl files, and put each line in its own textbox
+            List<Control> rows = new List<Control>();
             foreach (var eclAddr in ecl.decodedEcl.Keys.Reverse())
             {
                 var eclText = ViewerHelper.CreateTextBox();
@@ -129,13 +130,15 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
                 eclAnnotation.Width = 300;
                 eclAnnotation.Dock = DockStyle.Right;
                 var row = ViewerHelper.CreateRow();
-                codePanel.Controls.Add(row);
+                rows.Add(row);
                 row.Controls.Add(eclText);
 
                 row.Controls.Add(eclAnnotation);
                 if (ChangeFileEventArgs.targetPlace != "" && eclAnnotation.Text.Contains(ChangeFileEventArgs.targetPlace) && page.Text == ChangeFileEventArgs.currentDaxId.ToString())
                     bookmarkedRow = row;
             }
+            codePanel.Controls.AddRange(rows.ToArray());
+
             Application.UseWaitCursor = false;
             Application.DoEvents();
 
