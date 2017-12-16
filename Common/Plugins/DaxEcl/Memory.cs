@@ -213,15 +213,15 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
 
 			if (loc == 0x18)
 			{
-				return string.Format("<PLAYER.offset_0x14_b>");
+				return "<PLAYER.offset_0x14_b>";
 			}
 			else if (loc == 0x9B)
 			{
-				return string.Format("<PLAYER.offset_0x6E_b>");
+				return "<PLAYER.offset_0x6E_b>";
 			}
 			else if (loc == 0xa0)
 			{
-				return string.Format("<PLAYER.offset_0x73_b>");
+				return "<PLAYER.offset_0x73_b>";
 			}
 			else if (loc >= 0xa5 && loc <= 0xac)
 			{
@@ -229,39 +229,39 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
 			}
 			else if (loc == 0xb8)
 			{
-				return string.Format("<PLAYER.offset_0x84_b>");
+				return "<PLAYER.offset_0x84_b>";
 			}
 			else if (loc == 0xbb)
 			{
-				return string.Format("<PLAYER.offset_0x88_w>");
+				return "<PLAYER.offset_0x88_w>";
 			}
 			else if (loc == 0xbd)
 			{
-				return string.Format("<PLAYER.offset_0x8A_w>");
+				return"<PLAYER.offset_0x8A_w>";
 			}
 			else if (loc == 0xbf)
 			{
-				return string.Format("<PLAYER.offset_0x8C_w>");
+				return "<PLAYER.offset_0x8C_w>";
 			}
 			else if (loc == 0xc1)
 			{
-				return string.Format("<PLAYER.offset_0x8E_w>");
+				return "<PLAYER.offset_0x8E_w>";
 			}
 			else if (loc == 0xc3)
 			{
-				return string.Format("<PLAYER.offset_0x90_w>");
+				return "<PLAYER.offset_0x90_w>";
 			}
 			else if (loc == 0xd8)
 			{
-				return string.Format("<PLAYER.offset_0xA0_b>");
+				return "<PLAYER.offset_0xA0_b>";
 			}
 			else if (loc == 0xf7)
 			{
-				return string.Format("<PLAYER.offset_0xB8_w>");
+				return "<PLAYER.offset_0xB8_w>";
 			}
 			else if (loc == 0xf9)
 			{
-				return string.Format("<PLAYER.offset_0xBA_b>");
+				return "<PLAYER.offset_0xBA_b>";
 			}
 			else if (loc == 0x100)
 			{
@@ -273,19 +273,19 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
 			}
 			else if (loc == 0x10D)
 			{
-				return string.Format("<0>");
+				return "<0>";
 			}
 			else if (loc == 0x11B)
 			{
-				return string.Format("<PLAYER.offset_0x11C_b>");
+				return "<PLAYER.offset_0x11C_b>";
 			}
 			else if (loc == 0x2b1)
 			{
-				return string.Format("<PLAYER index?>");
+				return "<PLAYER index?>";
 			}
 			else if (loc == 0x2b4)
 			{
-				return string.Format("<PLAYER index?>");
+				return "<PLAYER index?>";
 			}
 			else if (loc == 0x2CF)
 			{
@@ -293,15 +293,15 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
 			}
 			else if (loc == 0x312)
 			{
-				return string.Format("<byte_1C6D4>");
+				return "<byte_1C6D4>";
 			}
 			else if (loc == 0x33E)
 			{
-				return string.Format("<dword_1BD37.field_0x67C>");
+				return "<dword_1BD37.field_0x67C>";
 			}
 			else
             {
-                return string.Format("");
+                return "";
             }
         }
 
