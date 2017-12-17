@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Gold Box Explorer")]
-[assembly: AssemblyDescription("A File explorer-like interface for viewing Gold Box game files from the 1990s. For more information please visit http://goldbox.codeplex.com.  Kudos to Simeon Pilgrim for all his hard work on decrypting many files. Visit his reprogramming of the DOS Curse of the Azure Bonds for some great code! http://code.google.com/p/coab/")]
+[assembly: AssemblyDescription("A File explorer-like interface for viewing Gold Box game files from the 1990s. For more information please visit http://goldbox.codeplex.com.  Kudos to Simeon Pilgrim for all his hard work on decrypting many files. Visit his reprogramming of the DOS Curse of the Azure Bonds for some great code! https://github.com/simeonpilgrim/coab")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Bil Simser")]
 [assembly: AssemblyProduct("Gold Box Explorer")]
