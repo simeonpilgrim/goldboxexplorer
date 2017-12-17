@@ -1,14 +1,9 @@
 using System;
 using System.Configuration;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -19,11 +14,9 @@ namespace GoldBoxExplorer.Lib.Exceptions
     public class UnhandledExceptionManager
     {
         private static bool _blnLogToFileOk;
-        private static bool _blnLogToScreenshotOk;
         private static Assembly _objParentAssembly;
         private static string _strException;
         private static string _strLogFullPath;
-        private static string _strScreenshotFullPath;
 
         private UnhandledExceptionManager()
         {
@@ -31,7 +24,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
 
         static UnhandledExceptionManager()
         {
-            ScreenshotImageFormat = ImageFormat.Png;
         }
 
         public static void AddHandler()
@@ -86,44 +78,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
             return assemblyFileTime;
         }
 
-        [DllImport("gdi32", CharSet=CharSet.Ansi, SetLastError=true, ExactSpelling=true)]
-        private static extern int BitBlt(int hDestDc, int x, int y, int nWidth, int nHeight, int hSrcDc, int xSrc, int ySrc, int dwRop);
-
-        private static void BitmapToJpeg(Image objBitmap, string strFilename, long lngCompression = 0x4bL)
-        {
-            var objEncoderParameters = new EncoderParameters(1);
-            var objImageCodecInfo = GetEncoderInfo("image/jpeg");
-            objEncoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, lngCompression);
-            objBitmap.Save(strFilename, objImageCodecInfo, objEncoderParameters);
-        }
-
-        private static string CurrentEnvironmentIdentity()
-        {
-            string currentEnvironmentIdentity;
-
-            try
-            {
-                currentEnvironmentIdentity = Environment.UserDomainName + @"\" + Environment.UserName;
-            }
-            catch (Exception)
-            {
-                return "";
-            }
-
-            return currentEnvironmentIdentity;
-        }
-
-        private static string CurrentWindowsIdentity()
-        {
-            try
-            {
-                return WindowsIdentity.GetCurrent().Name;
-            }
-            catch (Exception)
-            {
-                return "";
-            }
-        }
 
         private static string EnhancedStackTrace()
         {
@@ -181,18 +135,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
             }
         }
 
-        private static void ExceptionToScreenshot()
-        {
-            try
-            {
-                TakeScreenshotPrivate(GetApplicationPath() + "UnhandledException");
-                _blnLogToScreenshotOk = true;
-            }
-            catch (Exception)
-            {
-                _blnLogToScreenshotOk = false;
-            }
-        }
 
         internal static string ExceptionToString(Exception objException)
         {
@@ -284,25 +226,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
             objStringBuilder.Append("The following information about the error was automatically captured: ");
             objStringBuilder.Append(Environment.NewLine);
             objStringBuilder.Append(Environment.NewLine);
-            
-            if (TakeScreenshot)
-            {
-                objStringBuilder.Append(" ");
-                objStringBuilder.Append(strBullet);
-                objStringBuilder.Append(" ");
-                if (_blnLogToScreenshotOk)
-                {
-                    objStringBuilder.Append("a screenshot was taken of the desktop at:");
-                    objStringBuilder.Append(Environment.NewLine);
-                    objStringBuilder.Append("   ");
-                    objStringBuilder.Append(_strScreenshotFullPath);
-                }
-                else
-                {
-                    objStringBuilder.Append("a screenshot could NOT be taken of the desktop.");
-                }
-                objStringBuilder.Append(Environment.NewLine);
-            }
 
             if (LogToFile)
             {
@@ -343,10 +266,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
             {
                 try
                 {
-                    if (TakeScreenshot)
-                    {
-                        ExceptionToScreenshot();
-                    }
                     if (LogToFile)
                     {
                         ExceptionToFile();
@@ -410,27 +329,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
             return false;
         }
 
-        private static string GetCurrentIp()
-        {
-            try
-            {
-                return Dns.GetHostByName(Dns.GetHostName()).AddressList[0].ToString();
-            }
-            catch (Exception)
-            {
-                const string getCurrentIp = "127.0.0.1";
-                return getCurrentIp;
-            }
-        }
-
-        [DllImport("user32", CharSet=CharSet.Ansi, SetLastError=true, ExactSpelling=true)]
-        private static extern int GetDC(int hwnd);
-
-        private static ImageCodecInfo GetEncoderInfo(string strMimeType)
-        {
-            var objImageCodecInfo = ImageCodecInfo.GetImageEncoders();
-            return objImageCodecInfo.FirstOrDefault(t => t.MimeType == strMimeType);
-        }
 
         private static void KillApp()
         {
@@ -439,7 +337,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
 
         private static void LoadConfigSettings()
         {
-            TakeScreenshot = GetConfigBoolean("TakeScreenshot");
             LogToFile = GetConfigBoolean("LogToFile");
             DisplayDialog = GetConfigBoolean("DisplayDialog", true);
             IgnoreDebugErrors = GetConfigBoolean("IgnoreDebug", true);
@@ -517,33 +414,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
             objStringBuilder.Append("Date and Time:         ");
             objStringBuilder.Append(DateTime.Now);
             objStringBuilder.Append(Environment.NewLine);
-            objStringBuilder.Append("Machine Name:          ");
-            try
-            {
-                objStringBuilder.Append(Environment.MachineName);
-            }
-            catch (Exception e)
-            {
-                objStringBuilder.Append(e.Message);
-            }
-            objStringBuilder.Append(Environment.NewLine);
-            objStringBuilder.Append("IP Address:            ");
-            objStringBuilder.Append(GetCurrentIp());
-            objStringBuilder.Append(Environment.NewLine);
-            objStringBuilder.Append("Current User:          ");
-            objStringBuilder.Append(UserIdentity());
-            objStringBuilder.Append(Environment.NewLine);
-            objStringBuilder.Append(Environment.NewLine);
-            objStringBuilder.Append("Application Domain:    ");
-            try
-            {
-                objStringBuilder.Append(AppDomain.CurrentDomain.FriendlyName);
-            }
-            catch (Exception e)
-            {
-                objStringBuilder.Append(e.Message);
-            }
-            objStringBuilder.Append(Environment.NewLine);
             objStringBuilder.Append("Assembly Codebase:     ");
             try
             {
@@ -584,7 +454,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
                 objStringBuilder.Append(e.Message);
             }
             objStringBuilder.Append(Environment.NewLine);
-            objStringBuilder.Append(Environment.NewLine);
             if (blnIncludeStackTrace)
             {
                 objStringBuilder.Append(EnhancedStackTrace());
@@ -593,36 +462,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
             return objStringBuilder.ToString();
         }
 
-        private static void TakeScreenshotPrivate(string strFilename)
-        {
-            var objRectangle = Screen.PrimaryScreen.Bounds;
-            var objBitmap = new Bitmap(objRectangle.Right, objRectangle.Bottom);
-            var objGraphics = System.Drawing.Graphics.FromImage(objBitmap);
-            var hdcSrc = GetDC(0);
-            var hdcDest = objGraphics.GetHdc();
-            
-            BitBlt(hdcDest.ToInt32(), 0, 0, objRectangle.Right, objRectangle.Bottom, hdcSrc, 0, 0, 0xcc0020);
-            objGraphics.ReleaseHdc(hdcDest);
-            ReleaseDC(0, hdcSrc);
-            
-            var strFormatExtension = ScreenshotImageFormat.ToString().ToLower();
-            
-            if (Path.GetExtension(strFilename) != ("." + strFormatExtension))
-            {
-                strFilename = strFilename + "." + strFormatExtension;
-            }
-            
-            if (strFormatExtension == "jpeg")
-            {
-                BitmapToJpeg(objBitmap, strFilename, 80L);
-            }
-            else
-            {
-                objBitmap.Save(strFilename, ScreenshotImageFormat);
-            }
-            
-            _strScreenshotFullPath = strFilename;
-        }
 
         private static void ThreadExceptionHandler(object sender, ThreadExceptionEventArgs e)
         {
@@ -635,12 +474,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
             GenericExceptionHandler(objException);
         }
 
-        private static string UserIdentity()
-        {
-            var strTemp = CurrentWindowsIdentity();
-            return strTemp != "" ? strTemp : CurrentEnvironmentIdentity();
-        }
-
         public static bool DisplayDialog { get; set; }
 
         public static bool IgnoreDebugErrors { get; set; }
@@ -648,9 +481,5 @@ namespace GoldBoxExplorer.Lib.Exceptions
         public static bool KillAppOnException { get; set; }
 
         public static bool LogToFile { get; set; }
-
-        public static ImageFormat ScreenshotImageFormat { get; set; }
-
-        public static bool TakeScreenshot { get; set; }
     }
 }
