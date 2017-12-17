@@ -2,6 +2,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Text;
 
 namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
 {
@@ -138,7 +139,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
             annotationColumn.Text = "Annotation";
             annotationColumn.Width = 300;
 
-            foreach (var eclAddr in ecl.decodedEcl.Keys.Reverse())
+            foreach (var eclAddr in ecl.decodedEcl.Keys)
             {
                 string annotation;
                 if (ecl.annotations.TryGetValue(eclAddr, out annotation) == false)
@@ -247,14 +248,15 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
             // select all the ecl code in the panel and send it to the clipboard
             var b = (System.Windows.Forms.ButtonBase)sender;
             var eclListing = b.Parent.Parent.Controls[0];
-            string text = "";
-            foreach (System.Windows.Forms.Panel co in eclListing.Controls)
+            ListView eclRows = (ListView)eclListing.Controls[0];
+            StringBuilder sb = new StringBuilder();
+            foreach (ListViewItem lvi in eclRows.Items)
             {
-                System.Windows.Forms.TextBox tb = (System.Windows.Forms.TextBox)co.Controls[0];
-                text = tb.Text + "\r\n" + text;
+                sb.AppendLine($"{lvi.SubItems[0].Text} {lvi.SubItems[1].Text} {lvi.SubItems[2].Text} {lvi.SubItems[3].Text}");
             }
-            Clipboard.SetText(text);
+            Clipboard.SetText(sb.ToString());
         }
+
         public int ContainerWidth { get; set; }
     }
 }
