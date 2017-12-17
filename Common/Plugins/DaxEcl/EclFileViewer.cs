@@ -115,7 +115,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
             var opCodeColumn = new ColumnHeader();
             var opNameColumn = new ColumnHeader();
             var codeColumn = new ColumnHeader();
-            var annotationColumn =new ColumnHeader();
+            var annotationColumn = new ColumnHeader();
 
             eclView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
                 addrColumn, opCodeColumn, opNameColumn, codeColumn, annotationColumn });
@@ -165,6 +165,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
         }
 
         public float Zoom { get; set; }
+
         public void findInEcl(object sender, int index = 0)
         {
             var findTextBox = (TextBox)sender;
@@ -189,7 +190,6 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
                     {
                         index--;
                     }
-
                 }
             }
 
@@ -204,12 +204,14 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
             findNext = 1;
             findInEcl(sender);
         }
+
         public void searchEclNext(object sender, MouseEventArgs e)
         {
             var b = (System.Windows.Forms.ButtonBase)sender;
             findNext++;
             findInEcl(b.Parent.Controls[0], findNext);
         }
+
         void searchEclKeyPressed(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -219,6 +221,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
                 findInEcl(b.Parent.Controls[0], findNext);
             }
         }
+
         public void selectAllRows(object sender, MouseEventArgs e)
         {
             // select all the ecl code in the panel and send it to the clipboard
