@@ -170,42 +170,24 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
             var findTextBox = (TextBox)sender;
             var text = findTextBox.Text;
             Panel eclListing = (Panel)findTextBox.Parent.Parent.Controls[0];
-            string textFound = "";
-            // clear all selections
-            foreach (var c in eclListing.Controls)
-            {
-                var co = (System.Windows.Forms.Panel)c;
-                var tb = (System.Windows.Forms.TextBox)co.Controls[0];
-                tb.HideSelection = true;
-            }
-            // search through the textboxes to find the text, select it
-            for (int i = eclListing.Controls.Count - 1; i > 0; i--)
-            {
-                System.Windows.Forms.Panel rowControl = (System.Windows.Forms.Panel)eclListing.Controls[i];
-                System.Windows.Forms.TextBox tb = (System.Windows.Forms.TextBox)rowControl.Controls[0];
-                System.Windows.Forms.TextBox atb = (System.Windows.Forms.TextBox)rowControl.Controls[1];
-                int textStart = tb.Text.IndexOf(text, StringComparison.CurrentCultureIgnoreCase);
 
-                if (textStart > -1)
+            ListView eclRows = (ListView)eclListing.Controls[0];
+            StringBuilder sb = new StringBuilder();
+            foreach (ListViewItem lvi in eclRows.Items)
+            {
+                string rowtext = $"{lvi.SubItems[0].Text} {lvi.SubItems[1].Text} {lvi.SubItems[2].Text} {lvi.SubItems[3].Text} {lvi.SubItems[4].Text}";
+                int textStart = rowtext.IndexOf(text, StringComparison.CurrentCultureIgnoreCase);
+                if (textStart >= 0)
                 {
                     if (index <= 1)
                     {
-                        scrollIntoViewAndHighlight(text, eclListing, rowControl, tb, textStart);
+                        lvi.Selected = true;
+                        eclRows.TopItem = lvi;
+
                         return;
                     } else
-                        index--;
-                } else
-                {
-                    // can't find the text in the ecl code textbox, so try the annotations textbox next to it
-                    textStart = atb.Text.IndexOf(text, StringComparison.CurrentCultureIgnoreCase);
-                    if (textStart > -1)
                     {
-                        if (index <= 1)
-                        {
-                            scrollIntoViewAndHighlight(text, eclListing, rowControl, atb, textStart);
-                            return;
-                        } else
-                            index--;
+                        index--;
                     }
 
                 }
@@ -216,16 +198,10 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
 
         }
 
-        private static void scrollIntoViewAndHighlight(string text, Panel eclListing, System.Windows.Forms.Panel co, System.Windows.Forms.TextBox tb, int textStart)
-        {
-            eclListing.ScrollControlIntoView(co);
-            tb.Select(textStart, text.Length);
-            tb.HideSelection = false;
-            return;
-        }
 
         public void searchEcl(object sender, EventArgs e)
         {
+            findNext = 1;
             findInEcl(sender);
         }
         public void searchEclNext(object sender, MouseEventArgs e)
