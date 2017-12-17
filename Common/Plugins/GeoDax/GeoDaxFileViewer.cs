@@ -707,7 +707,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
         }
         private static void DrawViewCursor(Graphics surface, int xpos, int ypos, int facing)
         {
-            var pen = new Pen(Color.Red);
+            var pen = new Pen(Color.White, 1.7f);
             var x = xpos * RoomSize + GutterSize + RoomSize / 2;
             var y = ypos * RoomSize + GutterSize + RoomSize / 2;
             switch (facing)
