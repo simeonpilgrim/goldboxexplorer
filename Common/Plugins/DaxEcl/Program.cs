@@ -272,14 +272,14 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
                 int command = ecl_ptr[ecl_offset + MemBase];
 
                 int addr = ecl_offset;
-                string txt = string.Format("0x{0:X4} 0x{1:X2} ", addr, command);
+                string txt = string.Format("0x{0:X4}|0x{1:X2}|", addr, command);
 
                 CmdItem cmd;
                 if (CommandTable.TryGetValue(command, out cmd))
                 {
                     bool lastSkip = skipNext;
 
-                    txt += string.Format("{0} {1}", cmd.Name(), cmd.Dump());
+                    txt += string.Format("{0}|{1}", cmd.Name(), cmd.Dump());
 
                     if (lastSkip)
                     {
@@ -289,7 +289,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
                 }
                 else
                 {
-                    txt += "Unknown command";
+                    txt += "Unknown command|";
                     break;
                 }
 

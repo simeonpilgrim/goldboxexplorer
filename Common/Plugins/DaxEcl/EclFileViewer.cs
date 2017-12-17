@@ -43,8 +43,6 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
 
             tab = new TabControl { Dock = DockStyle.Fill };
 
-            Control bookmarkedRow = null; // the row we want to start at
-
             foreach (var ecl in _file.eclDumps)
             {
                 var page = new TabPage(ecl._blockName);
@@ -55,7 +53,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
                 page.Controls.Add(codePanel);
 
                 // fill the code panel with the decoded ecl code
-                bookmarkedRow = FillECLCodePanel(page);
+                int bookMarkIndex = FillECLCodePanel(page);
                 // add a search bar and 'select all' button to the top of the ecl listing
                 var selectAll = ViewerHelper.CreateButton();
                 selectAll.Text = "Copy to clipboard";
@@ -84,7 +82,11 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
                 if (page.Text == ChangeFileEventArgs.currentDaxId.ToString())
                 {
                     tab.SelectedTab = page;
-                    codePanel.ScrollControlIntoView(bookmarkedRow);
+                    ListView lv = (ListView)codePanel.Controls.Find("eclView", false)[0];
+                    var lvi = lv.Items[bookMarkIndex];
+                    lvi.Selected = true;
+                    lv.Select();
+                    lv.TopItem = lvi;
                 }
             }
             var stringPage = new TabPage("ECL Text");
@@ -105,47 +107,65 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
             codePanel.Controls.Clear();
         }
 
-        private static Control FillECLCodePanel(TabPage page)
+        private static int FillECLCodePanel(TabPage page)
         {
-            // this can take a while, so make sure the cursor is set to wait
-            Application.UseWaitCursor = true;
-            Application.DoEvents();
-
-            Control bookmarkedRow = null;
+            int bookMarkIndex = 0;
             Panel codePanel = (Panel)page.Controls.Find("codepanel", false)[0];
             EclDump.EclDump ecl = (EclDump.EclDump)codePanel.Tag;
             // decode ecl files, and put each line in its own textbox
-            List<Control> rows = new List<Control>();
+
+            var eclView = new ListView();
+            var addrColumn = new ColumnHeader();
+            var opCodeColumn = new ColumnHeader();
+            var opNameColumn = new ColumnHeader();
+            var codeColumn = new ColumnHeader();
+            var annotationColumn =new ColumnHeader();
+
+            eclView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+                addrColumn, opCodeColumn, opNameColumn, codeColumn, annotationColumn });
+
+            eclView.Name = "eclView";
+            eclView.Dock = DockStyle.Fill;
+            eclView.FullRowSelect = true;
+            eclView.MultiSelect = false;
+            eclView.TabIndex = 0;
+            eclView.UseCompatibleStateImageBehavior = false;
+            eclView.View = View.Details;
+            eclView.HideSelection = false;
+            addrColumn.Text = "Addr";
+            addrColumn.Width = 60;
+            opCodeColumn.Text = "OpCode";
+            opCodeColumn.Width = 60;
+            opNameColumn.Text = "OpName";
+            opNameColumn.Width = 100;
+            codeColumn.Text = "Code";
+            codeColumn.Width = 300;
+            annotationColumn.Text = "Annotation";
+            annotationColumn.Width = 300;
+
             foreach (var eclAddr in ecl.decodedEcl.Keys.Reverse())
             {
-                var eclText = ViewerHelper.CreateTextBox();
-                eclText.Text = ecl.decodedEcl[eclAddr];
-                eclText.Dock = DockStyle.Fill;
-                var eclAnnotation = ViewerHelper.CreateTextBox();
-                if (ecl.annotations.ContainsKey(eclAddr))
+                string annotation;
+                if (ecl.annotations.TryGetValue(eclAddr, out annotation) == false)
+                    annotation = "";
+                var data = ecl.decodedEcl[eclAddr].Split('|');
+                var child = new ListViewItem(data[0]);
+                var listViewItem = eclView.Items.Add(child);
+                listViewItem.SubItems.Add(data[1]);
+                listViewItem.SubItems.Add(data[2]);
+                listViewItem.SubItems.Add(data[3]);
+                listViewItem.SubItems.Add(annotation);
+
+                if (ChangeFileEventArgs.targetPlace != "" &&
+                    annotation.Contains(ChangeFileEventArgs.targetPlace) &&
+                    page.Text == ChangeFileEventArgs.currentDaxId.ToString())
                 {
-                    eclAnnotation.Text = ecl.annotations[eclAddr];
-                    eclText.BackColor = System.Drawing.Color.LightBlue;
-                    eclAnnotation.BackColor = System.Drawing.Color.LightBlue;
-
+                    bookMarkIndex = listViewItem.Index;
                 }
-                eclAnnotation.Width = 300;
-                eclAnnotation.Dock = DockStyle.Right;
-                var row = ViewerHelper.CreateRow();
-                rows.Add(row);
-
-                row.Controls.Add(eclText);
-
-                row.Controls.Add(eclAnnotation);
-                if (ChangeFileEventArgs.targetPlace != "" && eclAnnotation.Text.Contains(ChangeFileEventArgs.targetPlace) && page.Text == ChangeFileEventArgs.currentDaxId.ToString())
-                    bookmarkedRow = row;
             }
-            codePanel.Controls.AddRange(rows.ToArray());
+            codePanel.Controls.Add(eclView);
 
-            Application.UseWaitCursor = false;
-            Application.DoEvents();
-
-            return bookmarkedRow;
+            return bookMarkIndex;
         }
 
         public float Zoom { get; set; }
