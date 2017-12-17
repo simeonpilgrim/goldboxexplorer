@@ -41,7 +41,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             var bitmapCount = _bitmaps.Count;
             var largestImageHeight = 0;
             var pen = new Pen(Color.Fuchsia);
-            var pen2 = new Pen(Color.Black);
+            //var pen2 = new Pen(Color.Black);
             int fontSize = (int) (14  * Zoom);
             var font = new Font("Courier New", fontSize);
             var brush = new SolidBrush(Color.FromArgb(85, 85, 85));
@@ -50,6 +50,8 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             int fontHeight = (int)(font.Height);
             int padding = 10;
             int i = 0;
+            int totalWidth = 0;
+
             foreach (var entry in _bitmaps)
             {
                 var currentId = entry.Key;
@@ -84,17 +86,17 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
                     if (_displayBorder)
                     {
                         e.Graphics.DrawRectangle(pen, x, y, imageWidth, imageHeight);
+                        //e.Graphics.DrawRectangle(pen2, x, y, imageWidth + fontWidth, Math.Max(largestImageHeight, fontHeight));
                     }
-                    //var ox = x;
 
                     x += imageWidth + fontWidth + padding;
-                    //e.Graphics.DrawRectangle(pen2, ox, y, imageWidth + fontWidth, Math.Max(largestImageHeight, fontHeight));
+                    totalWidth = Math.Max(totalWidth, x);
                     i++;
                 }
             }
 
-            _pictureBox.Width = ContainerWidth;
-            _pictureBox.Height = (int) (fontSize + y + (largestImageHeight*Zoom));
+            _pictureBox.Width = totalWidth;
+            _pictureBox.Height = y + Math.Max(largestImageHeight, fontHeight) + padding;
         }
     }
 }
