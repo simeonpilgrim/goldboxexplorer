@@ -12,9 +12,11 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
     {
         public int cursorX;
         public int cursorY;
-        public string facing;
+        public int facing;
+        internal string[] dirName = { "n", "e", "s", "w" };
+        internal int[,] dirMove = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
 
-        public FpViewPos(int x = 8, int y = 8, string f = "s")
+        public FpViewPos(int x = 8, int y = 8, int f = 2)
         {
             cursorX = x;
             cursorY = y;
@@ -22,42 +24,29 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
         }
         public void rotateCursorLeft()
         {
-            var cardinals = "nwse";
-            var d = cardinals.IndexOf(facing);
-            d++;
-            d %= 4;
-            facing = cardinals.Substring(d, 1);
+            facing = (facing + 3) % 4;
         }
         public void rotateCursorRight()
         {
-            var cardinals = "nwse";
-            var d = cardinals.IndexOf(facing);
-            d--;
-            if (d == -1) d = 3;
-            facing = cardinals.Substring(d, 1);
+            facing = (facing + 1) % 4;
         }
         private void sanityCheck()
         {
             if (cursorX < 0) cursorX = 0;
-            if (cursorX > 15) cursorX = 15;
+            else if (cursorX > 15) cursorX = 15;
             if (cursorY < 0) cursorY = 0;
-            if (cursorY > 15) cursorY = 15;
-
+            else if (cursorY > 15) cursorY = 15;
         }
         public void moveCursorForwards()
         {
-            if (facing == "n") cursorY--;
-            if (facing == "s") cursorY++;
-            if (facing == "w") cursorX--;
-            if (facing == "e") cursorX++;
+            cursorY += dirMove[facing, 0];
+            cursorX += dirMove[facing, 1];
             sanityCheck();
         }
         public void moveCursorBackwards()
         {
-            if (facing == "s") cursorY--;
-            if (facing == "n") cursorY++;
-            if (facing == "e") cursorX--;
-            if (facing == "w") cursorX++;
+            cursorY -= dirMove[facing, 0];
+            cursorX -= dirMove[facing, 1];
             sanityCheck();
         }
 
@@ -370,7 +359,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             int viewPortHeight = (11 * eight);
             int xpos = currentFPViewPos.cursorX;
             int ypos = currentFPViewPos.cursorY;
-            string facing = currentFPViewPos.facing;
+            int facing = currentFPViewPos.facing;
 
             var cache_bm = new Bitmap(fpview, viewPortWidth, viewPortHeight);
             var surface = Graphics.FromImage(cache_bm);
@@ -379,35 +368,34 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             List<GeoWallRecord> fpsNearMapView = new List<GeoWallRecord>();
             List<GeoWallRecord> fpsMidMapView = new List<GeoWallRecord>();
             List<GeoWallRecord> fpsFarMapView = new List<GeoWallRecord>();
-            if (facing == "s")
+            switch (facing)
             {
+            case 0:
+                fpsNearMapView = getMapRow(xpos - 1, ypos, xpos + 1, wallRecords);
+                fpsMidMapView = getMapRow(xpos - 2, ypos - 1, xpos + 2, wallRecords);
+                fpsFarMapView = getMapRow(xpos - 3, ypos - 2, xpos + 3, wallRecords);
+                break;
+            case 1:
+                fpsNearMapView = getMapCol(ypos - 1, xpos, ypos + 1, wallRecords);
+                fpsMidMapView = getMapCol(ypos - 2, xpos + 1, ypos + 2, wallRecords);
+                fpsFarMapView = getMapCol(ypos - 3, xpos + 2, ypos + 3, wallRecords);
+                break;
+            case 2:
                 fpsNearMapView = getMapRow(xpos - 1, ypos, xpos + 1, wallRecords);
                 fpsNearMapView.Reverse();
                 fpsMidMapView = getMapRow(xpos - 2, ypos + 1, xpos + 2, wallRecords);
                 fpsMidMapView.Reverse();
                 fpsFarMapView = getMapRow(xpos - 3, ypos + 2, xpos + 3, wallRecords);
                 fpsFarMapView.Reverse();
-            }
-            if (facing == "n")
-            {
-                fpsNearMapView = getMapRow(xpos - 1, ypos, xpos + 1, wallRecords);
-                fpsMidMapView = getMapRow(xpos - 2, ypos - 1, xpos + 2, wallRecords);
-                fpsFarMapView = getMapRow(xpos - 3, ypos - 2, xpos + 3, wallRecords);
-            }
-            if (facing == "e")
-            {
-                fpsNearMapView = getMapCol(ypos - 1, xpos, ypos + 1, wallRecords);
-                fpsMidMapView = getMapCol(ypos - 2, xpos + 1, ypos + 2, wallRecords);
-                fpsFarMapView = getMapCol(ypos - 3, xpos + 2, ypos + 3, wallRecords);
-            }
-            if (facing == "w")
-            {
+                break;
+            case 3:
                 fpsNearMapView = getMapCol(ypos - 1, xpos, ypos + 1, wallRecords);
                 fpsNearMapView.Reverse();
                 fpsMidMapView = getMapCol(ypos - 2, xpos - 1, ypos + 2, wallRecords);
                 fpsMidMapView.Reverse();
                 fpsFarMapView = getMapCol(ypos - 3, xpos - 2, ypos + 3, wallRecords);
                 fpsFarMapView.Reverse();
+                break;
             }
             var c = 0;
             int lastWall = 0; int lastRightWall = 0;
@@ -513,44 +501,24 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
 
         }
 
-        private int getOppositeWall(GeoWallRecord w, string facing)
+        private int getOppositeWall(GeoWallRecord w, int facing)
         {
-            int wallType = 0;
-            if (facing == "s")
-                wallType = w.South;
-            if (facing == "n")
-                wallType = w.North;
-            if (facing == "e")
-                wallType = w.East;
-            if (facing == "w")
-                wallType = w.West;
-            return wallType;
+            switch (facing)
+            {
+            case 0: return w.North;
+            case 1: return w.East;
+            case 2: return w.South;
+            case 3: return w.West;
+            default: return 0;
+            }
         }
-        private int getRightWall(GeoWallRecord w, string facing)
+        private int getRightWall(GeoWallRecord w, int facing)
         {
-            int wallType = 0;
-            if (facing == "e")
-                wallType = w.South;
-            if (facing == "w")
-                wallType = w.North;
-            if (facing == "n")
-                wallType = w.East;
-            if (facing == "s")
-                wallType = w.West;
-            return wallType;
+            return getOppositeWall(w, (facing + 1) % 4);
         }
-        private int getLeftWall(GeoWallRecord w, string facing)
+        private int getLeftWall(GeoWallRecord w, int facing)
         {
-            int wallType = 0;
-            if (facing == "w")
-                wallType = w.South;
-            if (facing == "e")
-                wallType = w.North;
-            if (facing == "s")
-                wallType = w.East;
-            if (facing == "n")
-                wallType = w.West;
-            return wallType;
+            return getOppositeWall(w, (facing + 3) % 4);
         }
 
         private static GeoWallRecord getXYMap(int x, int y, IEnumerable<GeoWallRecord> wallRecords)
@@ -737,30 +705,29 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             var point = new PointF((x * wallWidth) - (int)(eight * 2.0), (int)(3.0 * eight));
             surface.DrawImage(get_wallbm(wallType, 9), point);
         }
-        private static void DrawViewCursor(Graphics surface, int xpos, int ypos, string facing)
+        private static void DrawViewCursor(Graphics surface, int xpos, int ypos, int facing)
         {
             var pen = new Pen(Color.Red);
             var x = xpos * RoomSize + GutterSize + RoomSize / 2;
             var y = ypos * RoomSize + GutterSize + RoomSize / 2;
-            if (facing == "n")
+            switch (facing)
             {
+            case 0:
                 surface.DrawLine(pen, x - 5, y, x, y - 5);
                 surface.DrawLine(pen, x + 5, y, x, y - 5);
-            }
-            if (facing == "s")
-            {
-                surface.DrawLine(pen, x - 5, y, x, y + 5);
-                surface.DrawLine(pen, x + 5, y, x, y + 5);
-            }
-            if (facing == "w")
-            {
-                surface.DrawLine(pen, x, y - 5, x - 5, y);
-                surface.DrawLine(pen, x, y + 5, x - 5, y);
-            }
-            if (facing == "e")
-            {
+                break;
+            case 1:
                 surface.DrawLine(pen, x, y - 5, x + 5, y);
                 surface.DrawLine(pen, x, y + 5, x + 5, y);
+                break;
+            case 2:
+                surface.DrawLine(pen, x - 5, y, x, y + 5);
+                surface.DrawLine(pen, x + 5, y, x, y + 5);
+                break;
+            case 3:
+                surface.DrawLine(pen, x, y - 5, x - 5, y);
+                surface.DrawLine(pen, x, y + 5, x - 5, y);
+                break;
             }
         }
         private static void DrawGrid(Graphics surface)
