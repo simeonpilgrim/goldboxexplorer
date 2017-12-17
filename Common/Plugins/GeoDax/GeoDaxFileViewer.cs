@@ -149,7 +149,6 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
                                 && eclBlk.eventCount > 0)
                             {
                                 ev.daxId = id;
-
                             }
                         }
                     }
@@ -590,7 +589,6 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
         /// <param name="surface"></param>
         private void DrawViewPort(Graphics surface, int x, int eight = 8, int e = 0)
         {
-
             var wallWidth = 7 * eight;
             var wallHeight = 11 * eight;
             var pen = new Pen(Color.DodgerBlue);
@@ -615,11 +613,15 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
                 int wallset_id = current_dax_id;
 
                 if (_goldBoxFile.wallsetMapping.ContainsKey(current_dax_id))
+                {
                     wallset_id = _goldBoxFile.wallsetMapping[current_dax_id][i];
-                if (wallset_id == 255 || wallset_id == 127) { wallset_id = current_dax_id; }
+                }
+                if (wallset_id == 255 || wallset_id == 127)
+                {
+                    wallset_id = current_dax_id;
+                }
                 if (_goldBoxFile.wallsetBitmaps.ContainsKey(wallset_id))
                 {
-
                     int wsLen;
                     wsLen = _goldBoxFile.wallsetBitmaps[wallset_id].Count / 10;
                     if (wt <= wsLen)

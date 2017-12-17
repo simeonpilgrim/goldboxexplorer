@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
-using System.Drawing;
-using System.Diagnostics;
-using GoldBoxExplorer.Lib.Plugins;
 
 namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
 {
@@ -100,7 +96,6 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
                 byte[] data = block.data;
 
 				var ss = String.Format("File: {0} Block: {1} Size: {2}", block.file, block.id, data.Length);
-                //Debug.WriteLine(ss);
 
                 string block_name = string.Format("{0}_{1:000}", Path.Combine(Path.GetDirectoryName(block.file), Path.GetFileNameWithoutExtension(block.file)), block.id);
 
@@ -114,14 +109,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
         bool stopVM;
         internal int ecl_offset;
         EclData ecl_ptr;
-/*        
-        string[] stringTable = new string[40] { 
-            string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 
-            string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 
-            string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 
-            string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 
-         };
-        */
+
         string[] stringTable = new string[160] { 
             string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 
             string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 
@@ -143,11 +131,11 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
 
         private void DumpEcl(byte[] data, string block_name)
         {
-            addrDone = new Dictionary<int,string>();
+            addrDone = new Dictionary<int, string>();
             addrTodo = new Queue<int>();
             byteMap = new Dictionary<int, int>();
 
-		//	Debug.WriteLine(block_name);
+            //	Debug.WriteLine(block_name);
 
             ecl_offset = MemStart;
             ecl_ptr = new EclData(data);
@@ -166,22 +154,12 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
             opps = LoadEclOpps(1);
             int ecl_initial_entryPoint = opps[0].Word;
 
-
-           // using (var sw = new StreamWriter(block_name + ".txt", false))
-           // {
-             //   sw.WriteLine("vm_run_1          0x{0:X4}", vm_run_addr_1);
-             //   sw.WriteLine("SearchLocation    0x{0:X4}", SearchLocationAddr);
-             //   sw.WriteLine("PreCampCheck      0x{0:X4}", PreCampCheckAddr);
-             //   sw.WriteLine("CampInterrupted   0x{0:X4}", CampInterruptedAddr);
-             //   sw.WriteLine("ecl_initial_entry 0x{0:X4}", ecl_initial_entryPoint);
-            
-                AddAddr(ecl_initial_entryPoint, "StartUp");
-                AddAddr(CampInterruptedAddr, "StartUp");
-                AddAddr(PreCampCheckAddr, "StartUp");
-                AddAddr(SearchLocationAddr, "StartUp");
-                AddAddr(vm_run_addr_1, "StartUp");
-                DecodeBlock(decodedEcl);
-         //   }
+            AddAddr(ecl_initial_entryPoint, "StartUp");
+            AddAddr(CampInterruptedAddr, "StartUp");
+            AddAddr(PreCampCheckAddr, "StartUp");
+            AddAddr(SearchLocationAddr, "StartUp");
+            AddAddr(vm_run_addr_1, "StartUp");
+            DecodeBlock(decodedEcl);
         }
 
         Dictionary<int, int> byteMap;
@@ -220,7 +198,6 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
 
                 if (a.Value != lastCodeAddr)
                 {
-               //     sw.Add(addrDone[a.Value]);
                     sw[a.Value] = addrDone[a.Value];
                     lastCodeAddr = a.Value;
                 }
@@ -298,9 +275,6 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
                 AddLine(addr, txt, (ecl_offset - addr) & 0xFFFF);
             }
         }
-
-
-
 
 
         Dictionary<int, CmdItem> CommandTable = new Dictionary<int, CmdItem>();
@@ -418,12 +392,10 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl.EclDump
             {
                 if (size == 0)
                 {
-                   // EclDump.ecl_offset += 1;
                     ecldump.ecl_offset += 1;
                 }
                 else
                 {
-                    //EclDump.LoadEclOpps(size);
                     ecldump.LoadEclOpps(size);
                 }
                 return "todo";

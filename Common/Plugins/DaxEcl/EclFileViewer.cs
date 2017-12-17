@@ -26,21 +26,17 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
             }
         }
 
-
-
         // dynamically create ECL code listing when the tab is clicked on
         private void ECLTabControlLoadSelected(Object sender, TabControlEventArgs e)
         {
             if (e.TabPage != null && e.TabPage.Controls.Find("codepanel", false).Length > 0)
             {
                 FillECLCodePanel(e.TabPage);
-
             }
         }
 
         public Control GetControl()
         {
-
             tab = new TabControl { Dock = DockStyle.Fill };
 
             foreach (var ecl in _file.eclDumps)
@@ -76,7 +72,6 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
                 row1.Controls.Add(headerText);
                 row1.Controls.Add(findNext);
                 row1.Controls.Add(selectAll);
-
 
                 tab.TabPages.Add(page);
                 if (page.Text == ChangeFileEventArgs.currentDaxId.ToString())
