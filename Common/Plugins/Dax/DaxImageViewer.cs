@@ -39,50 +39,62 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             var x = 0;
             var y = 0;
             var bitmapCount = _bitmaps.Count;
-            var lastImageHeight = 0;
+            var largestImageHeight = 0;
             var pen = new Pen(Color.Fuchsia);
+            var pen2 = new Pen(Color.Black);
             int fontSize = (int) (14  * Zoom);
             var font = new Font("Courier New", fontSize);
             var brush = new SolidBrush(Color.FromArgb(85, 85, 85));
-            int padding = fontSize * 3;
+            const int MAX_ID_WIDTH = 3;
+            int fontWidth = fontSize * MAX_ID_WIDTH;
+            int fontHeight = (int)(font.Height);
+            int padding = 10;
             int i = 0;
-            foreach (var entry in _bitmaps) {
+            foreach (var entry in _bitmaps)
+            {
                 var currentId = entry.Key;
 
-                foreach(var currentImage in entry.Value) {
+                foreach (var currentImage in entry.Value)
+                {
+                    int imageWidth = (int)(currentImage.Width * Zoom);
+                    int imageHeight = (int)(currentImage.Height * Zoom);
 
-                    lastImageHeight = (int)Math.Max(lastImageHeight, currentImage.Height * Zoom);
+                    largestImageHeight = Math.Max(largestImageHeight, imageHeight);
 
                     var newRow = false;
 
-                    if (_display35ImagesPerRow) {
+                    if (_display35ImagesPerRow)
+                    {
                         if (i > 0 && i % 35 == 0)
                             newRow = true;
-                    } else {
-                        if (x + ((padding + currentImage.Width) * Zoom) > ContainerWidth)
-                            newRow = true;
+                    } else if (x + (fontWidth + imageWidth + padding) >= ContainerWidth && i > 0)
+                    {
+                        newRow = true;
                     }
 
-                    if (newRow) {
+                    if (newRow)
+                    {
                         x = 0;
-                        var ypad = (int)(padding * Zoom / 2);
-                        y += lastImageHeight + ypad;
-                        if (i < bitmapCount - 1) lastImageHeight = 0;
+                        y += Math.Max(largestImageHeight, fontHeight) + padding;
+                        largestImageHeight = imageHeight;
                     }
 
-                    e.Graphics.DrawImage(currentImage, x, y, currentImage.Width * Zoom, currentImage.Height * Zoom);
-                    e.Graphics.DrawString(currentId.ToString(), font, brush, x + (currentImage.Width * Zoom), y);
-                    if (_displayBorder) {
-                        e.Graphics.DrawRectangle(pen, x, y, currentImage.Width * Zoom, currentImage.Height * Zoom);
+                    e.Graphics.DrawImage(currentImage, x, y, imageWidth, imageHeight);
+                    e.Graphics.DrawString(currentId.ToString(), font, brush, x + imageWidth, y);
+                    if (_displayBorder)
+                    {
+                        e.Graphics.DrawRectangle(pen, x, y, imageWidth, imageHeight);
                     }
+                    //var ox = x;
 
-                    x += (int)((currentImage.Width + padding) * Zoom);
+                    x += imageWidth + fontWidth + padding;
+                    //e.Graphics.DrawRectangle(pen2, ox, y, imageWidth + fontWidth, Math.Max(largestImageHeight, fontHeight));
                     i++;
                 }
             }
 
             _pictureBox.Width = ContainerWidth;
-            _pictureBox.Height = (int) (fontSize + y + (lastImageHeight*Zoom));
+            _pictureBox.Height = (int) (fontSize + y + (largestImageHeight*Zoom));
         }
     }
 }
