@@ -95,11 +95,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
                         strAttribValue = ((AssemblyCopyrightAttribute) objAttribute).Copyright;
                         break;
 
-                    case "System.Reflection.AssemblyCompanyAttribute":
-                        strAttribName = "Company";
-                        strAttribValue = ((AssemblyCompanyAttribute) objAttribute).Company;
-                        break;
-
                     case "System.Reflection.AssemblyTitleAttribute":
                         strAttribName = "Title";
                         strAttribValue = ((AssemblyTitleAttribute) objAttribute).Title;
@@ -126,12 +121,7 @@ namespace GoldBoxExplorer.Lib.Exceptions
             {
                 throw new MissingFieldException("The AssemblyInfo file for the assembly " + objAssembly.GetName().Name + " must have the <Assembly:AssemblyProduct()> key populated.");
             }
-            
-            if (objNameValueCollection["Company"] == null)
-            {
-                throw new MissingFieldException("The AssemblyInfo file for the assembly " + objAssembly.GetName().Name + " must have the <Assembly: AssemblyCompany()>  key populated.");
-            }
-            
+
             return objNameValueCollection;
         }
 
@@ -280,17 +270,6 @@ namespace GoldBoxExplorer.Lib.Exceptions
             }
         }
 
-        public static string AppCompany
-        {
-            get
-            {
-                if (_objAssemblyAttribs == null)
-                {
-                    _objAssemblyAttribs = GetAssemblyAttribs();
-                }
-                return _objAssemblyAttribs["Company"];
-            }
-        }
 
         public static string AppCopyright
         {

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Gold Box Explorer Common")]
 [assembly: AssemblyDescription("Common routines for the Gold Box Explorer program")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Bil Simser")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Gold Box Explorer Common")]
 [assembly: AssemblyCopyright("Copyright© Bil Simser 2010-2013\nCopyright© Marainein 2013-2015")]
 [assembly: AssemblyTrademark("")]
