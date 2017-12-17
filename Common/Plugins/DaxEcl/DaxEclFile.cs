@@ -14,11 +14,10 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
 
         public DaxEclFile(string path) : base(path)
         {
-
             ProcessBlocks();
         }
 
-        
+
         protected override sealed void ProcessBlocks()
         {
             foreach (var block in Blocks)
@@ -54,7 +53,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
 
         private static bool IsReadableText(string txt)
         {
-            var invalidCharArray = new[] { 
+            var invalidCharArray = new[] {
                 '_', '=', '[', ']', '(', ')', '%', '<', '$', '*',
                 '&', '\\', '/', '^', '>',
             };
@@ -86,26 +85,26 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
                 uint curr;
                 switch (state)
                 {
-                    case 1:
-                        curr = (thisByte >> 2) & 0x3F;
-                        if (curr != 0) sb.Append(InflateChar(curr));
-                        state = 2;
-                        break;
+                case 1:
+                    curr = (thisByte >> 2) & 0x3F;
+                    if (curr != 0) sb.Append(InflateChar(curr));
+                    state = 2;
+                    break;
 
-                    case 2:
-                        curr = ((lastByte << 4) | (thisByte >> 4)) & 0x3F;
-                        if (curr != 0) sb.Append(InflateChar(curr));
-                        state = 3;
-                        break;
+                case 2:
+                    curr = ((lastByte << 4) | (thisByte >> 4)) & 0x3F;
+                    if (curr != 0) sb.Append(InflateChar(curr));
+                    state = 3;
+                    break;
 
-                    case 3:
-                        curr = ((lastByte << 2) | (thisByte >> 6)) & 0x3F;
-                        if (curr != 0) sb.Append(InflateChar(curr));
+                case 3:
+                    curr = ((lastByte << 2) | (thisByte >> 6)) & 0x3F;
+                    if (curr != 0) sb.Append(InflateChar(curr));
 
-                        curr = thisByte & 0x3F;
-                        if (curr != 0) sb.Append(InflateChar(curr));
-                        state = 1;
-                        break;
+                    curr = thisByte & 0x3F;
+                    if (curr != 0) sb.Append(InflateChar(curr));
+                    state = 1;
+                    break;
                 }
                 lastByte = thisByte;
             }
@@ -120,7 +119,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
                 arg0 += 0x40;
             }
 
-            return (char) arg0;
+            return (char)arg0;
         }
 
         public override string ToString()

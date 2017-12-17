@@ -82,12 +82,11 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             ContainerWidth = containerWidth;
             _goldBoxFile = goldBoxFile;
             Zoom = zoom;
-            
+
         }
 
         private Rectangle getPictureBoxOffset(PictureBox pb)
         {
-            
             // It seems the only way of correctly adjusting for the picturebox position after it has been resized is to access private data from the picturebox class
             System.Reflection.PropertyInfo pInfo = pb.GetType().GetProperty("ImageRectangle",
             System.Reflection.BindingFlags.Public |
@@ -95,7 +94,6 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             System.Reflection.BindingFlags.Instance);
 
             return (Rectangle)pInfo.GetValue(pb, null);
-            //return new Point(rectangle.X, rectangle.Y);
         }
         public void mouseClickOnMap(object sender, MouseEventArgs e)
         {
@@ -104,16 +102,16 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             var pictureBox = panel.Controls["map"] as PictureBox;
             var mousePos = new Point(e.X, e.Y); // Cursor.Position;
             var offset = getPictureBoxOffset(pictureBox);
-            
+
             float x = mousePos.X - offset.X;
             float y = mousePos.Y - offset.Y;
 
             x /= ((float)offset.Width / FullMapWidth);
-            y /= ((float) offset.Height / FullMapHeight);
+            y /= ((float)offset.Height / FullMapHeight);
 
             int row = (int)((y - GutterSize) / (RoomSize));
-            int col = (int) ((x - GutterSize) / (RoomSize));
-       
+            int col = (int)((x - GutterSize) / (RoomSize));
+
             EventHandler<ChangeFileEventArgs> handler = ChangeSelectedFile;
 
             // Event will be null if there are no subscribers 
@@ -136,21 +134,22 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
                 // first choose the ecl with the same id as the map, if such an ecl block exists
                 if (_goldBoxFile._daxEclFile.eclDumps.Find(ecldump => ecldump._blockId == mapRecord.DaxId) != null)
                 {
-                    ev.daxId = mapRecord.DaxId;                 
+                    ev.daxId = mapRecord.DaxId;
                 }
 
                 // have any of the ecls referenced this map in code? if so, pick one of those
-                if (_goldBoxFile.referencedByEcl.Count > 0)                 
+                if (_goldBoxFile.referencedByEcl.Count > 0)
                 {
                     // do we not have a valid ecl block yet? if not, default to the first ecl block that references this map id
                     if (ev.daxId == -1)
                         ev.daxId = _goldBoxFile.referencedByEcl[0];
-                   
+
                     // see if there's an ecl with the same number of events, that will be the most likely candidate
                     foreach (var id in _goldBoxFile.referencedByEcl)
                     {
                         var eclBlk = _goldBoxFile._daxEclFile.eclDumps.Find(ecldump => ecldump._blockId == id); // find the ecl block which matches id
-                        if ( eclBlk != null) {
+                        if (eclBlk != null)
+                        {
                             if ((_goldBoxFile.highestEvent[mapRecord.DaxId] == eclBlk.eventCount
                                 || (_goldBoxFile.highestEvent[mapRecord.DaxId] & 31) == eclBlk.eventCount)
                                 && eclBlk.eventCount > 0)
@@ -165,14 +164,14 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
                 if (ev.daxId == -1)
                     ev.daxId = _goldBoxFile._daxEclFile.eclDumps[0]._blockId;
                 // Use the () operator to raise the event.
-                if (ev.place!= null)
+                if (ev.place != null)
                     handler(this, ev);
             }
         }
-        
+
         public void rotateCursorLeft(object sender, MouseEventArgs e)
         {
-            var fpViewPos = (FpViewPos) tab.SelectedTab.Tag;
+            var fpViewPos = (FpViewPos)tab.SelectedTab.Tag;
             fpViewPos.rotateCursorLeft();
             moveCursor();
         }
@@ -206,7 +205,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             {
                 if (m.Name == tab.SelectedTab.Text)
                 {
-                    Drawfpview(fpViewBox.Image, m.Walls, (FpViewPos) tab.SelectedTab.Tag);
+                    Drawfpview(fpViewBox.Image, m.Walls, (FpViewPos)tab.SelectedTab.Tag);
                     fpViewBox.Invalidate();
                     DrawMap(pictureBox.Image, m.Walls, (FpViewPos)tab.SelectedTab.Tag);
                     pictureBox.Invalidate();
@@ -218,7 +217,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
         {
             var panel = tab.SelectedTab.Controls["mapPanel"];
             var pictureBox = panel.Controls["map"] as PictureBox;
-            using (var form = new GeoExportForm(pictureBox,tab.SelectedTab.Text))
+            using (var form = new GeoExportForm(pictureBox, tab.SelectedTab.Text))
             {
                 form.ShowDialog();
             }
@@ -228,16 +227,15 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
         {
             var maps = _goldBoxFile.GetMaps();
 
-            tab = new TabControl {Dock = DockStyle.Fill};
+            tab = new TabControl { Dock = DockStyle.Fill };
             tab.Invalidated += InvalidateMap;
 
             foreach (var geoMapRecord in maps)
             {
                 var newFPViewPos = new FpViewPos();
-                //System.Diagnostics.Debug.WriteLine("name='"+ geoMapRecord.Name+"'");
-                //mapCursors.Add(geoMapRecord.DaxId, newFPViewPos);
+
                 selected_dax_id = geoMapRecord.DaxId;
-                var page = new TabPage(geoMapRecord.Name) {Size = new Size(FullMapWidth + FPViewWidth, Math.Max(FPViewHeight, FullMapHeight))};
+                var page = new TabPage(geoMapRecord.Name) { Size = new Size(FullMapWidth + FPViewWidth, Math.Max(FPViewHeight, FullMapHeight)) };
                 page.Tag = newFPViewPos;
                 var panel = ViewerHelper.CreatePanel();
                 panel.Name = "mapPanel";
@@ -270,7 +268,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
                 backwardButton.Width = 40;
                 leftButton.MouseClick += rotateCursorLeft;
                 leftButton.Dock = DockStyle.Left;
-                
+
 
                 var rightButton = ViewerHelper.CreateButton();
                 rightButton.Text = "Right";
@@ -281,19 +279,19 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
                 var movementRow2 = ViewerHelper.CreateRow();
                 movementRow2.Controls.Add(rightButton);
                 movementRow2.Controls.Add(leftButton);
- 
+
                 var fpViewPanel = ViewerHelper.CreatePanel();
                 fpViewPanel.Dock = DockStyle.Left;
                 fpViewPanel.Width = FPViewWidth;
                 fpViewPanel.Height = FPViewHeight;
                 fpViewPanel.Name = "FPViewPanel";
-           //     var mapPanel = ViewerHelper.CreatePanel();
+                //     var mapPanel = ViewerHelper.CreatePanel();
                 var fpViewBox = new PictureBox();
                 fpViewBox.Dock = DockStyle.Fill;
                 fpViewBox.BorderStyle = BorderStyle.Fixed3D;
 
                 var pictureBox = new PictureBox();
-                pictureBox.Dock = DockStyle.Left ;
+                pictureBox.Dock = DockStyle.Left;
                 pictureBox.MouseClick += mouseClickOnMap;
 
                 movementButtonPanel.Controls.Add(movementRow1);
@@ -317,9 +315,9 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
                 fpViewBox.Image = fpvbitmap;
                 fpViewBox.SizeMode = PictureBoxSizeMode.Zoom;
 
-                fpViewBox.Size = new Size(FPViewWidth, FPViewHeight+60);
+                fpViewBox.Size = new Size(FPViewWidth, FPViewHeight + 60);
 
-                
+
                 fpViewPanel.Controls.Add(fpViewBox);
                 fpViewPanel.Controls.Add(movementButtonPanel);
                 panel.Controls.Add(fpViewPanel);
@@ -346,12 +344,12 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
                 pictureBox.Width = (int)(FullMapWidth * Zoom);
                 pictureBox.Height = (int)(FullMapHeight * Zoom);
                 var fpViewBox = panel.Controls["FPViewPanel"].Controls["3d view"] as PictureBox;
-                fpViewBox.Width = (int)(FPViewWidth* Zoom);
+                fpViewBox.Width = (int)(FPViewWidth * Zoom);
                 fpViewBox.Height = (int)(FPViewHeight * Zoom);
 
 
             }
-            
+
 
         }
 
@@ -368,7 +366,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
         {
             //var surface = Graphics.FromImage(fpview);
             int eight = 8;
-            int viewPortWidth = (7 * eight)* 2 - (eight*3) ;
+            int viewPortWidth = (7 * eight) * 2 - (eight * 3);
             int viewPortHeight = (11 * eight);
             int xpos = currentFPViewPos.cursorX;
             int ypos = currentFPViewPos.cursorY;
@@ -377,9 +375,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             var cache_bm = new Bitmap(fpview, viewPortWidth, viewPortHeight);
             var surface = Graphics.FromImage(cache_bm);
             surface.Clear(Color.White);
-//            surface.
-//            var xpos = cursorX;
-//            var ypos = cursorY;
+
             List<GeoWallRecord> fpsNearMapView = new List<GeoWallRecord>();
             List<GeoWallRecord> fpsMidMapView = new List<GeoWallRecord>();
             List<GeoWallRecord> fpsFarMapView = new List<GeoWallRecord>();
@@ -470,7 +466,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             {
                 var wallType = getOppositeWall(w, facing);
                 if (wallType > 0)
-                    DrawMidFacingWall(surface, c, 8, w.Event & 127, wallType);                    
+                    DrawMidFacingWall(surface, c, 8, w.Event & 127, wallType);
                 c++;
             }
             c = 0;
@@ -512,9 +508,9 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             }
             DrawViewPort(surface, c, 8, 127);
             var screenSurface = Graphics.FromImage(fpview);
-            var r =new Rectangle(0, 0, viewPortWidth*4, viewPortHeight*4);
+            var r = new Rectangle(0, 0, viewPortWidth * 4, viewPortHeight * 4);
             screenSurface.DrawImage(cache_bm, r);
-            
+
         }
 
         private int getOppositeWall(GeoWallRecord w, string facing)
@@ -567,8 +563,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
                 }
             }
             // we're off the edge of the map, so return an empty/dummy wallrecord
-            return new GeoWallRecord
-            {
+            return new GeoWallRecord {
                 Row = y,
                 Column = x,
                 North = 0,
@@ -619,24 +614,14 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             var wallWidth = 7 * eight;
             var wallHeight = 11 * eight;
             var pen = new Pen(Color.DodgerBlue);
-            surface.DrawRectangle(pen, (int)(1.5*eight)+100 + (int)(0.5 * wallWidth), 100 - eight, wallWidth * 2 -(int)(3*eight), wallHeight);
+            surface.DrawRectangle(pen, (int)(1.5 * eight) + 100 + (int)(0.5 * wallWidth), 100 - eight, wallWidth * 2 - (int)(3 * eight), wallHeight);
         }
-        /// 
-/*        private int getWallSetIdxById(int id) {
-            int i = 0;
-            foreach (var b in _goldBoxFile._daxWallDefFile._blockIds)
-            {
-                if (b == id) return i;
-                i++;
-            }
-            return -1;
-        }*/
+
         private Bitmap get_wallbm(int wt, int wv)
         {
             Bitmap bm;
             var pink = 0XFFFF52FF;
-            //var pink = 0XFFFF5252;
-            Color transparentColor  =  Color.FromArgb((int)pink);
+            Color transparentColor = Color.FromArgb((int)pink);
 
             // get current block_id
             var current_dax_id = selected_dax_id;
@@ -645,9 +630,10 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
                 current_dax_id = _goldBoxFile.GetMaps()[tab.SelectedIndex].DaxId;
             }
             // get wallset idx by block_id
-            for(int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++)
+            {
                 int wallset_id = current_dax_id;
-                
+
                 if (_goldBoxFile.wallsetMapping.ContainsKey(current_dax_id))
                     wallset_id = _goldBoxFile.wallsetMapping[current_dax_id][i];
                 if (wallset_id == 255 || wallset_id == 127) { wallset_id = current_dax_id; }
@@ -664,15 +650,15 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
                     }
                     wt -= wsLen;
                 }
-                }
+            }
             return new Bitmap(1, 1);
         }
-            
+
         private void DrawNearRightWall(Graphics surface, int x, int eight = 8, int e = 0, int wallType = 1)
         {
             var wallWidth = 7 * eight;
             var wallHeight = 8 * eight;
-            var point = new PointF(((x+1) * wallWidth)-(int)(5*eight), -eight);
+            var point = new PointF(((x + 1) * wallWidth) - (int)(5 * eight), -eight);
             var pen = new Pen(Color.DodgerBlue);
             surface.DrawImage(get_wallbm(wallType, 8), point);
         }
@@ -680,15 +666,15 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
         {
             var wallWidth = 7 * eight;
             var wallHeight = 8 * eight;
-            var point = new PointF( x * wallWidth -(int)(7.0*eight), -eight);
+            var point = new PointF(x * wallWidth - (int)(7.0 * eight), -eight);
             var pen = new Pen(Color.DodgerBlue);
             surface.DrawImage(get_wallbm(wallType, 7), point);
         }
         private void DrawNearFacingWall(Graphics surface, int x, int eight = 8, int e = 0, int wallType = 1)
         {
 
-            var wallWidth = 7*eight;
-            var wallHeight = 8*eight;
+            var wallWidth = 7 * eight;
+            var wallHeight = 8 * eight;
             var point = new PointF((x * wallWidth) - (int)(5.0 * eight), 0);
 
             surface.DrawImage(get_wallbm(wallType, 6), point);
@@ -697,23 +683,23 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
         }
         private void DrawMidFacingWall(Graphics surface, int x, int eight = 8, int e = 0, int wallType = 1)
         {
-            var wallWidth = 3*8;
-            var wallHeight = 4*8;
-            var point = new PointF((x * wallWidth) - (int)(eight * 2.0),  (int)(2.0 * eight));
+            var wallWidth = 3 * 8;
+            var wallHeight = 4 * 8;
+            var point = new PointF((x * wallWidth) - (int)(eight * 2.0), (int)(2.0 * eight));
             surface.DrawImage(get_wallbm(wallType, 3), point);
         }
         private void DrawMidLeftWall(Graphics surface, int x, int eight = 8, int e = 0, int wallType = 1)
         {
             var wallWidth = 3 * 8;
             var wallHeight = 4 * 8;
-            var point = new PointF((x * wallWidth) - (int)(eight * 4) , 0 );
+            var point = new PointF((x * wallWidth) - (int)(eight * 4), 0);
             surface.DrawImage(get_wallbm(wallType, 4), point);
         }
         private void DrawMidRightWall(Graphics surface, int x, int eight = 8, int e = 0, int wallType = 1)
         {
             var wallWidth = 3 * 8;
             var wallHeight = 4 * 8;
-            var point = new PointF( (x * wallWidth) + (int)(eight * 1), 0);
+            var point = new PointF((x * wallWidth) + (int)(eight * 1), 0);
             surface.DrawImage(get_wallbm(wallType, 5), point);
         }
         private void DrawFarRightWall(Graphics surface, int x, int eight = 8, int e = 0, int wallType = 1, bool doubleWall = true)
@@ -723,7 +709,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             var offset = eight;
             if (x == 3)
                 offset = 0;
-            var point = new PointF(offset +  (x * wallWidth) , 0 + (int)(2.0 * eight));
+            var point = new PointF(offset + (x * wallWidth), 0 + (int)(2.0 * eight));
             surface.DrawImage(get_wallbm(wallType, 2), point);
         }
         private void DrawFarLeftWall(Graphics surface, int x, int eight = 8, int e = 0, int wallType = 1, bool doubleWall = true)
@@ -733,7 +719,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             var offset = -eight;
             if (x == 3)
                 offset = 0;
-            var point = new PointF(offset + (x * wallWidth) - (int)(eight * 2.0),  (int)(2.0 * eight));
+            var point = new PointF(offset + (x * wallWidth) - (int)(eight * 2.0), (int)(2.0 * eight));
             surface.DrawImage(get_wallbm(wallType, 1), point);
         }
 
@@ -741,20 +727,20 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
         {
             var wallWidth = 2 * 8;
             var wallHeight = 1 * 8;
-            var point = new PointF( (x * wallWidth) - (int)(eight * 1.0),  (int)(3.0 * eight));
+            var point = new PointF((x * wallWidth) - (int)(eight * 1.0), (int)(3.0 * eight));
             surface.DrawImage(get_wallbm(wallType, 0), point);
         }
         private void DrawFarFacingWallAdj(Graphics surface, int x, int eight = 8, int e = 0, int wallType = 1, bool doubleWall = true)
         {
             var wallWidth = 2 * 8;
             var wallHeight = 1 * 8;
-            var point = new PointF( (x * wallWidth) - (int)(eight * 2.0), (int)(3.0 * eight));
+            var point = new PointF((x * wallWidth) - (int)(eight * 2.0), (int)(3.0 * eight));
             surface.DrawImage(get_wallbm(wallType, 9), point);
         }
         private static void DrawViewCursor(Graphics surface, int xpos, int ypos, string facing)
         {
             var pen = new Pen(Color.Red);
-            var x = xpos * RoomSize + GutterSize + RoomSize/2;
+            var x = xpos * RoomSize + GutterSize + RoomSize / 2;
             var y = ypos * RoomSize + GutterSize + RoomSize / 2;
             if (facing == "n")
             {
@@ -763,13 +749,13 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             }
             if (facing == "s")
             {
-                surface.DrawLine(pen, x-5, y, x, y+5);
-                surface.DrawLine(pen, x+5, y, x, y+5);
+                surface.DrawLine(pen, x - 5, y, x, y + 5);
+                surface.DrawLine(pen, x + 5, y, x, y + 5);
             }
             if (facing == "w")
             {
-                surface.DrawLine(pen, x, y-5, x-5, y);
-                surface.DrawLine(pen, x, y+5, x-5, y);
+                surface.DrawLine(pen, x, y - 5, x - 5, y);
+                surface.DrawLine(pen, x, y + 5, x - 5, y);
             }
             if (facing == "e")
             {
@@ -823,8 +809,7 @@ namespace GoldBoxExplorer.Lib.Plugins.GeoDax
             var brush = new SolidBrush(Color.FromArgb(85, 85, 85));
             var point = new PointF(0, 0);
             var rectSize = new SizeF(RoomSize, RoomSize);
-            var format = new StringFormat
-            {
+            var format = new StringFormat {
                 Alignment = StringAlignment.Center,
                 LineAlignment = StringAlignment.Center
             };

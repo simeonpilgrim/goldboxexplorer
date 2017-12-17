@@ -14,51 +14,12 @@ namespace GoldBoxExplorer
         private readonly MainViewPresenter _presenter;
         private bool _ctrlIsDown;
         
-      //  private static System.Timers.Timer aTimer;
-      //  delegate void SetTextCallback(string text);
-
-//       [System.Runtime.InteropServices.DllImport("User32")]
-  //      private extern static int GetGuiResources(IntPtr hProcess, int uiFlags);
-
-//        private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-  //      {
-            //statusLabel.Text
-//                if (this.statusLabel.InvokeRequired)
-  //  {
-        // It's on a different thread, so use Invoke.
-
-    //        string h = "";
-      //  using (Process process = Process.GetCurrentProcess())
-    //    {
-    //        var gdiHandles = GetGuiResources(process.Handle, 0);
-    //        var userHandles = GetGuiResources(process.Handle, 1);
-    //        h = gdiHandles.ToString() + " , " + userHandles.ToString();
-      //  }
-
-        //SetTextCallback d = new SetTextCallback(SetText);
-        //this.Invoke(d, new object[] {h});
-    //}
-    //else
-    //{
-        // It's on the same thread, no need for Invoke 
-        //SetTextCallback d = new SetTextCallback(SetText);
-        //this.statusLabel.Text= e.SignalTime.ToShortTimeString();
-    //    }
-//        private void SetText(string text)
-  //      {
-    //        this.statusLabel.Text = text;
-      //  }
         public MainForm()
         {
             InitializeComponent();
             _presenter = new MainViewPresenter(this);
             HookupEventHandlers();
             HookupExtraKeyboardShortcuts();
-
-        /*    aTimer = new System.Timers.Timer();
-            aTimer.Interval = 500;
-            aTimer.Elapsed += OnTimedEvent;
-            aTimer.Enabled = true;*/
         }
 
         private void HookupExtraKeyboardShortcuts()
@@ -93,7 +54,6 @@ namespace GoldBoxExplorer
             }
         }
 
-        //public void ChangeSelectedFile(string filename, int daxBlockId)
         public void ChangeSelectedFile(Object sender, ChangeFileEventArgs e)
         {
             var x = fileView.FindItemWithText(e.filename);

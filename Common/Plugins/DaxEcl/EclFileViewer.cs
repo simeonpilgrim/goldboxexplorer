@@ -17,18 +17,17 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
             _file = file;
         }
 
-// dynamically create ECL code listing when the tab is clicked on
+        // dynamically create ECL code listing when the tab is clicked on
         private void ECLTabControlUnloadDeselected(Object sender, TabControlEventArgs e)
         {
             if (e.TabPage != null && e.TabPage.Controls.Find("codepanel", false).Length > 0)
             {
                 EmptyECLCodePanel(e.TabPage);
-
             }
         }
-   
 
- 
+
+
         // dynamically create ECL code listing when the tab is clicked on
         private void ECLTabControlLoadSelected(Object sender, TabControlEventArgs e)
         {
@@ -38,71 +37,74 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
 
             }
         }
+
         public Control GetControl()
         {
 
-                tab = new TabControl { Dock = DockStyle.Fill };
+            tab = new TabControl { Dock = DockStyle.Fill };
 
-                Control bookmarkedRow = null; // the row we want to start at
+            Control bookmarkedRow = null; // the row we want to start at
 
-                foreach (var ecl in _file.eclDumps)
+            foreach (var ecl in _file.eclDumps)
+            {
+                var page = new TabPage(ecl._blockName);
+                Panel codePanel = (Panel)ViewerHelper.CreatePanel();
+                codePanel.Name = "codepanel";
+                codePanel.Tag = ecl;
+                //page.AutoScroll = true;
+                page.Controls.Add(codePanel);
+
+                // fill the code panel with the decoded ecl code
+                bookmarkedRow = FillECLCodePanel(page);
+                // add a search bar and 'select all' button to the top of the ecl listing
+                var selectAll = ViewerHelper.CreateButton();
+                selectAll.Text = "Copy to clipboard";
+                selectAll.MouseClick += selectAllRows;
+                selectAll.Dock = DockStyle.Right;
+
+                var findNext = ViewerHelper.CreateButton();
+                findNext.Text = "find next";
+                findNext.MouseClick += searchEclNext;
+                findNext.Dock = DockStyle.Right;
+
+                TextBox headerText = (TextBox)ViewerHelper.CreateTextBox();
+                headerText.ReadOnly = false;
+                headerText.Text = "Type text to find";
+                headerText.TextChanged += searchEcl;
+                headerText.KeyDown += searchEclKeyPressed;
+                headerText.Dock = DockStyle.Fill;
+                var row1 = ViewerHelper.CreateRow();
+                page.Controls.Add(row1);
+                row1.Controls.Add(headerText);
+                row1.Controls.Add(findNext);
+                row1.Controls.Add(selectAll);
+
+
+                tab.TabPages.Add(page);
+                if (page.Text == ChangeFileEventArgs.currentDaxId.ToString())
                 {
-                    var page = new TabPage(ecl._blockName);
-                    Panel codePanel = (Panel) ViewerHelper.CreatePanel();
-                    codePanel.Name = "codepanel";
-                    codePanel.Tag = ecl;
-                    //page.AutoScroll = true;
-                    page.Controls.Add(codePanel);
-
-                    // fill the code panel with the decoded ecl code
-                    bookmarkedRow = FillECLCodePanel(page);
-                    // add a search bar and 'select all' button to the top of the ecl listing
-                    var selectAll = ViewerHelper.CreateButton();
-                    selectAll.Text = "Copy to clipboard";
-                    selectAll.MouseClick += selectAllRows;
-                    selectAll.Dock = DockStyle.Right;
-
-                    var findNext = ViewerHelper.CreateButton();
-                    findNext.Text = "find next";
-                    findNext.MouseClick += searchEclNext;
-                    findNext.Dock = DockStyle.Right;
-
-                    TextBox headerText = (TextBox) ViewerHelper.CreateTextBox();
-                    headerText.ReadOnly = false;
-                    headerText.Text = "Type text to find";
-                    headerText.TextChanged += searchEcl;
-                    headerText.KeyDown += searchEclKeyPressed;
-                    headerText.Dock = DockStyle.Fill;
-                    var row1 = ViewerHelper.CreateRow();
-                    page.Controls.Add(row1);
-                    row1.Controls.Add(headerText);
-                    row1.Controls.Add(findNext);
-                    row1.Controls.Add(selectAll);
-
-
-                    tab.TabPages.Add(page);
-                    if (page.Text == ChangeFileEventArgs.currentDaxId.ToString())
-                    {
-                        tab.SelectedTab = page;
-                        codePanel.ScrollControlIntoView(bookmarkedRow);
-                    }
+                    tab.SelectedTab = page;
+                    codePanel.ScrollControlIntoView(bookmarkedRow);
                 }
-                var stringPage = new TabPage("ECL Text");
-                stringPage.AutoScroll = true;
-                var control = ViewerHelper.CreateTextBoxMultiline();
-                control.Text = _file.ToString();
-                stringPage.Controls.Add(control);
-                tab.TabPages.Add(stringPage);
-                tab.Selected += ECLTabControlLoadSelected;
-                tab.Deselected += ECLTabControlUnloadDeselected;
-                return tab;
-            
+            }
+            var stringPage = new TabPage("ECL Text");
+            stringPage.AutoScroll = true;
+            var control = ViewerHelper.CreateTextBoxMultiline();
+            control.Text = _file.ToString();
+            stringPage.Controls.Add(control);
+            tab.TabPages.Add(stringPage);
+            tab.Selected += ECLTabControlLoadSelected;
+            tab.Deselected += ECLTabControlUnloadDeselected;
+            return tab;
+
         }
+
         private static void EmptyECLCodePanel(TabPage tabPage)
         {
             Panel codePanel = (Panel)tabPage.Controls.Find("codepanel", false)[0];
             codePanel.Controls.Clear();
         }
+
         private static Control FillECLCodePanel(TabPage page)
         {
             // this can take a while, so make sure the cursor is set to wait
@@ -111,7 +113,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
 
             Control bookmarkedRow = null;
             Panel codePanel = (Panel)page.Controls.Find("codepanel", false)[0];
-            EclDump.EclDump ecl = (EclDump.EclDump) codePanel.Tag;
+            EclDump.EclDump ecl = (EclDump.EclDump)codePanel.Tag;
             // decode ecl files, and put each line in its own textbox
             List<Control> rows = new List<Control>();
             foreach (var eclAddr in ecl.decodedEcl.Keys.Reverse())
@@ -131,6 +133,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
                 eclAnnotation.Dock = DockStyle.Right;
                 var row = ViewerHelper.CreateRow();
                 rows.Add(row);
+
                 row.Controls.Add(eclText);
 
                 row.Controls.Add(eclAnnotation);
@@ -160,9 +163,9 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
                 tb.HideSelection = true;
             }
             // search through the textboxes to find the text, select it
-            for (int i = eclListing.Controls.Count-1; i > 0; i--)
+            for (int i = eclListing.Controls.Count - 1; i > 0; i--)
             {
-                System.Windows.Forms.Panel rowControl = (System.Windows.Forms.Panel) eclListing.Controls[i];
+                System.Windows.Forms.Panel rowControl = (System.Windows.Forms.Panel)eclListing.Controls[i];
                 System.Windows.Forms.TextBox tb = (System.Windows.Forms.TextBox)rowControl.Controls[0];
                 System.Windows.Forms.TextBox atb = (System.Windows.Forms.TextBox)rowControl.Controls[1];
                 int textStart = tb.Text.IndexOf(text, StringComparison.CurrentCultureIgnoreCase);
@@ -173,11 +176,9 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
                     {
                         scrollIntoViewAndHighlight(text, eclListing, rowControl, tb, textStart);
                         return;
-                    }
-                    else
+                    } else
                         index--;
-                }
-                else
+                } else
                 {
                     // can't find the text in the ecl code textbox, so try the annotations textbox next to it
                     textStart = atb.Text.IndexOf(text, StringComparison.CurrentCultureIgnoreCase);
@@ -187,8 +188,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
                         {
                             scrollIntoViewAndHighlight(text, eclListing, rowControl, atb, textStart);
                             return;
-                        }
-                        else
+                        } else
                             index--;
                     }
 
@@ -207,7 +207,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
             tb.HideSelection = false;
             return;
         }
-  
+
         public void searchEcl(object sender, EventArgs e)
         {
             findInEcl(sender);
@@ -230,11 +230,12 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
         public void selectAllRows(object sender, MouseEventArgs e)
         {
             // select all the ecl code in the panel and send it to the clipboard
-            var b = (System.Windows.Forms.ButtonBase) sender;
+            var b = (System.Windows.Forms.ButtonBase)sender;
             var eclListing = b.Parent.Parent.Controls[0];
             string text = "";
-            foreach (System.Windows.Forms.Panel co in eclListing.Controls) {
-                System.Windows.Forms.TextBox tb = (System.Windows.Forms.TextBox) co.Controls[0];
+            foreach (System.Windows.Forms.Panel co in eclListing.Controls)
+            {
+                System.Windows.Forms.TextBox tb = (System.Windows.Forms.TextBox)co.Controls[0];
                 text = tb.Text + "\r\n" + text;
             }
             Clipboard.SetText(text);

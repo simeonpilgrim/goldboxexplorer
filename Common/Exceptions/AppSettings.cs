@@ -27,24 +27,24 @@ namespace GoldBoxExplorer.Lib.Exceptions
         private static DateTime AssemblyBuildDate(Assembly objAssembly, bool blnForceFileDate = false)
         {
             var objVersion = objAssembly.GetName().Version;
-            
+
             if (blnForceFileDate)
             {
                 return AssemblyFileTime(objAssembly);
             }
-            
+
             var dtBuild = DateTime.Parse("01/01/2000").AddDays(objVersion.Build).AddSeconds(objVersion.Revision * 2);
-            
+
             if (TimeZone.IsDaylightSavingTime(dtBuild, TimeZone.CurrentTimeZone.GetDaylightChanges(dtBuild.Year)))
             {
                 dtBuild = dtBuild.AddHours(1.0);
             }
-            
+
             if (((DateTime.Compare(dtBuild, DateTime.Now) > 0) | (objVersion.Build < 730)) | (objVersion.Revision == 0))
             {
                 dtBuild = AssemblyFileTime(objAssembly);
             }
-            
+
             return dtBuild;
         }
 
@@ -56,8 +56,7 @@ namespace GoldBoxExplorer.Lib.Exceptions
             {
                 if (objAssembly != null && objAssembly.Location != null)
                     assemblyFileTime = File.GetLastWriteTime(objAssembly.Location);
-            }
-            catch (Exception)
+            } catch (Exception)
             {
                 assemblyFileTime = DateTime.MaxValue;
                 return assemblyFileTime;
@@ -71,13 +70,13 @@ namespace GoldBoxExplorer.Lib.Exceptions
             var objNameValueCollection = new NameValueCollection();
             var objAssembly = GetEntryAssembly();
             var customAttributes = objAssembly.GetCustomAttributes(false);
-            
+
             foreach (var attribute in customAttributes)
             {
                 var objAttribute = RuntimeHelpers.GetObjectValue(attribute);
                 var strAttribName = objAttribute.GetType().ToString();
                 var strAttribValue = "";
-                
+
                 switch (strAttribName)
                 {
                     case "System.Reflection.AssemblyTrademarkAttribute":
@@ -111,12 +110,12 @@ namespace GoldBoxExplorer.Lib.Exceptions
                     objNameValueCollection.Add(strAttribName, strAttribValue);
                 }
             }
-            
+
             objNameValueCollection.Add("CodeBase", objAssembly.CodeBase.Replace("file:///", ""));
             objNameValueCollection.Add("BuildDate", AssemblyBuildDate(objAssembly).ToString());
             objNameValueCollection.Add("Version", objAssembly.GetName().Version.ToString());
             objNameValueCollection.Add("FullName", objAssembly.FullName);
-            
+
             if (objNameValueCollection["Product"] == null)
             {
                 throw new MissingFieldException("The AssemblyInfo file for the assembly " + objAssembly.GetName().Name + " must have the <Assembly:AssemblyProduct()> key populated.");
@@ -133,12 +132,12 @@ namespace GoldBoxExplorer.Lib.Exceptions
             {
                 switch (strTemp.ToLower())
                 {
-                    case "1":
-                    case "true":
-                        return true;
+                case "1":
+                case "true":
+                    return true;
                 }
             }
-            
+
             return false;
         }
 
@@ -155,15 +154,14 @@ namespace GoldBoxExplorer.Lib.Exceptions
                     if (IsUrl(strArg))
                     {
                         GetUrlCommandLineArgs(strArg, ref objNameValueCollection);
-                    }
-                    else if (!GetKeyValueCommandLineArg(strArg, ref objNameValueCollection))
+                    } else if (!GetKeyValueCommandLineArg(strArg, ref objNameValueCollection))
                     {
                         objNameValueCollection.Add("arg" + intArg, RemoveArgPrefix(strArg));
                         intArg++;
                     }
                 }
             }
-            
+
             return objNameValueCollection;
         }
 
@@ -192,18 +190,17 @@ namespace GoldBoxExplorer.Lib.Exceptions
                 enumerator = objMatchCollection.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
-                    var objMatch = (Match) enumerator.Current;
+                    var objMatch = (Match)enumerator.Current;
                     objNameValueCollection.Add(RemoveArgPrefix(objMatch.Groups["Key"].ToString()), objMatch.Groups["Value"].ToString());
                 }
-            }
-            finally
+            } finally
             {
                 if (enumerator is IDisposable)
                 {
                     (enumerator as IDisposable).Dispose();
                 }
             }
-            
+
             return true;
         }
 
@@ -222,11 +219,10 @@ namespace GoldBoxExplorer.Lib.Exceptions
                 enumerator = objMatchCollection.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
-                    var objMatch = (Match) enumerator.Current;
+                    var objMatch = (Match)enumerator.Current;
                     objNameValueCollection.Add(objMatch.Groups["Key"].ToString(), objMatch.Groups["Value"].ToString());
                 }
-            }
-            finally
+            } finally
             {
                 if (enumerator is IDisposable)
                 {
@@ -251,7 +247,8 @@ namespace GoldBoxExplorer.Lib.Exceptions
 
         public static string AppBase
         {
-            get {
+            get
+            {
                 return _strAppBase ??
                        (_strAppBase =
                         Convert.ToString(RuntimeHelpers.GetObjectValue(AppDomain.CurrentDomain.GetData("APPBASE"))));
@@ -396,7 +393,8 @@ namespace GoldBoxExplorer.Lib.Exceptions
 
         public static string ConfigPath
         {
-            get {
+            get
+            {
                 return _strConfigPath ??
                        (_strConfigPath =
                         Convert.ToString(
@@ -414,7 +412,8 @@ namespace GoldBoxExplorer.Lib.Exceptions
 
         public static string RuntimeVersion
         {
-            get {
+            get
+            {
                 return _strRuntimeVersion ??
                        (_strRuntimeVersion = Regex.Match(Environment.Version.ToString(), @"\d+.\d+.\d+").ToString());
             }
