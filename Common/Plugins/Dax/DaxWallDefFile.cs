@@ -9,7 +9,6 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 
     public class DaxWallDefFile : DaxFile, IRenderBlock
     {
-        public List<Bitmap> wallBitmaps = new List<Bitmap>();
         public int _blockId;
 
         public void setBlockId(int id) { _blockId = id; }
