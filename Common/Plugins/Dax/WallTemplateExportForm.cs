@@ -75,15 +75,13 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             _daxId = "tlb";
             initExportForm();
         }
-        public WallTemplateExportForm(List<Bitmap> wallBitmaps, string daxId)
-            : this()
+
+        public WallTemplateExportForm(List<Bitmap> wallBitmaps, string daxId) : this()
         {
             _wallBitmaps = wallBitmaps;
             _daxId = daxId;
 
             initExportForm();
-
-
         }
 
         private void initExportForm()

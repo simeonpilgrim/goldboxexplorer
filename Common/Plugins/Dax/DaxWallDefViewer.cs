@@ -23,11 +23,11 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             _blockIds = blockIds;
             maxWallSetHeight = (15 * 8 * (maxWallHeight + 1)) + initialYOffset;
         }
-
      
         public float Zoom { get; set; }
 
         public int ContainerWidth { get; set; }
+
 
         void drawWallViews(Graphics surface, List<Bitmap> wallset)
         {
@@ -68,8 +68,8 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             {
                 form.ShowDialog();
             }
-
         }
+
         public Control GetControl()
         {
             var width = ContainerWidth;

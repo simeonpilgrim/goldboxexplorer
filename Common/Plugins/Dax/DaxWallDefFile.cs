@@ -24,8 +24,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
         public List<int> _blockIds = new List<int>();
         public List<int> _bitmapIds = new List<int>();
 
-                public DaxWallDefFile(string path, int blockId = -1)
-            : base(path)
+        public DaxWallDefFile(string path, int blockId = -1) : base(path)
         {
             _blockId = blockId;
             ProcessBlocks();
@@ -41,13 +40,11 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             }
         }
 
-
         private void processWallSet(DaxFileBlock daxFileBlock)
         {
             byte[] data = daxFileBlock.Data;
             _blockIds.Add(daxFileBlock.Id);
             wallsets.Add(assembleWallSet(daxFileBlock, FileName, daxFileBlock.Id));
-
         }
 
         public IEnumerable<Bitmap> GetBitmaps()
@@ -63,9 +60,6 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             }
             return bml.AsReadOnly();
         }
-
-
-    
 
         public void Draw8x8Tiles(Bitmap wallImage, byte[,] wall, List<Bitmap> bitmaps)
         {
@@ -105,6 +99,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
                 }
             }
         }
+
         static Bitmap bitmapZero()
         {
             var bm = new Bitmap(8, 8);
@@ -124,8 +119,6 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
                 _bitmapIds.Add(daxFileBlock.Id);
 
             return aggregateWalls(wallSetData, tileBitmaps); // return bitmap list
-
-
         }
 
         List<Bitmap> load8x8Bitmaps(DaxFileBlock daxFileBlock, string fileName, string tileFileName, int blockId)
@@ -180,7 +173,6 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             // loop through walls
             foreach (var wallData in wallSetData)
             {
-                
                 Bitmap wallbm = new Bitmap(wallData.GetLength(1) * 8, wallData.GetLength(0) * 8);
                 // create bitmap
                 Draw8x8Tiles(wallbm, wallData, bitmaps8x8);
@@ -203,14 +195,14 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
             }
 
             return fn;
-
         }
+
         int getUniversalTileBlockId()
         {
             // assume the universal 8x8 tiles are found in block 203, for those games that have a universal block
             return 203;
-
         }
+
         List<byte[,]> loadWallDefs(DaxFileBlock daxFileBlock)
         {
             // rows, columns and offsets of the subarrays holding walldefs for various viewing angles and distances
