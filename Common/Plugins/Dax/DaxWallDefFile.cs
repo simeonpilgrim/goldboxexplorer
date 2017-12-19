@@ -12,7 +12,6 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
         public List<Bitmap> wallBitmaps = new List<Bitmap>();
         public int _blockId;
 
-        public int getBlockId() { return _blockId; }
         public void setBlockId(int id) { _blockId = id; }
 
         public string Name { get; private set; }

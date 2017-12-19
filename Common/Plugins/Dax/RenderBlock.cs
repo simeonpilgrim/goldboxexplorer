@@ -7,7 +7,6 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
     {
         protected List<Bitmap> Bitmaps = new List<Bitmap>();
         private int _blockId;
-        public int getBlockId() { return _blockId; }
         public void setBlockId(int id) { _blockId = id; }
 
         public IEnumerable<Bitmap> GetBitmaps()
