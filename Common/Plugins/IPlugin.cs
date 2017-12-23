@@ -9,7 +9,7 @@ namespace GoldBoxExplorer.Lib.Plugins
         bool IsSatisifedBy(string path);
         IPlugin CreateUsing(PluginParameter args);
         IGoldBoxViewer Viewer { get; set; }
-        IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> GetBitmapDictionary();
+        IReadOnlyList<KeyValuePair<int, IReadOnlyList<Bitmap>>> GetBitmapDictionary();
         bool IsImageFile();    
     }
 }

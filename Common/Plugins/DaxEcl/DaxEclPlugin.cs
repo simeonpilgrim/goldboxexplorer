@@ -25,7 +25,7 @@ namespace GoldBoxExplorer.Lib.Plugins.DaxEcl
 
         public bool IsImageFile() { return false; }
 
-        public IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> GetBitmapDictionary() {
+        public IReadOnlyList<KeyValuePair<int, IReadOnlyList<Bitmap>>> GetBitmapDictionary() {
             return null;
         }
     }

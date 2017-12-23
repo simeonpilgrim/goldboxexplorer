@@ -6,7 +6,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 {
     public class DaxImageFile : DaxFile
     {
-        private readonly Dictionary<int, IReadOnlyList<Bitmap>> _bitmaps_dic = new Dictionary<int, IReadOnlyList<Bitmap>>();
+        private readonly List<KeyValuePair<int, IReadOnlyList<Bitmap>>> _bitmaps_dic = new List<KeyValuePair<int, IReadOnlyList<Bitmap>>>();
 
         public DaxImageFile(string file) : base(file)
         {
@@ -15,17 +15,17 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
 
         protected override sealed void ProcessBlocks()
         {
-            foreach (var block in Blocks) 
+            foreach (var block in Blocks)
             {
                 var renderBlock = new RenderBlockFactory().CreateUsing(block);
 
-                _bitmaps_dic.Add(block.Id, renderBlock.GetBitmaps().ToList());
+                _bitmaps_dic.Add(new KeyValuePair<int, IReadOnlyList<Bitmap>>(block.Id, renderBlock.GetBitmaps().ToList()));
             }
         }
-   
-        public IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> GetBitmapDictionary() {
+
+        public IReadOnlyList<KeyValuePair<int, IReadOnlyList<Bitmap>>> GetBitmapDictionary()
+        {
             return _bitmaps_dic;
         }
-
     }
 }

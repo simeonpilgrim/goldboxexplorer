@@ -24,7 +24,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Tbl
 
         public bool IsImageFile() { return true; }
 
-        public IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> GetBitmapDictionary() {
+        public IReadOnlyList<KeyValuePair<int, IReadOnlyList<Bitmap>>> GetBitmapDictionary() {
             return null;
         }
     }

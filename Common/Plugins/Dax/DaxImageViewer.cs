@@ -8,13 +8,13 @@ namespace GoldBoxExplorer.Lib.Plugins.Dax
     public class DaxImageViewer : IGoldBoxViewer
     {
         public event EventHandler<ChangeFileEventArgs> ChangeSelectedFile;
-        private readonly IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> _bitmaps;
+        private readonly IReadOnlyList<KeyValuePair<int, IReadOnlyList<Bitmap>>> _bitmaps;
 
         private readonly bool _display35ImagesPerRow;
         private readonly bool _displayBorder;
         private readonly PictureBox _pictureBox;
 
-        public DaxImageViewer(IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> bitmaps, float zoom, int containerWidth, bool display35ImagesPerRow, bool displayBorder)
+        public DaxImageViewer(IReadOnlyList<KeyValuePair<int, IReadOnlyList<Bitmap>>> bitmaps, float zoom, int containerWidth, bool display35ImagesPerRow, bool displayBorder)
         {
             Zoom = zoom;
             ContainerWidth = containerWidth;

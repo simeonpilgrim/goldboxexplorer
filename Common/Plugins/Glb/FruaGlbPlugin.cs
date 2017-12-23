@@ -37,7 +37,7 @@ namespace GoldBoxExplorer.Lib.Plugins.Glb
         public IGoldBoxViewer Viewer { get; set; }
         public bool IsImageFile() { return true; }
 
-        public IReadOnlyDictionary<int, IReadOnlyList<Bitmap>> GetBitmapDictionary() {
+        public IReadOnlyList<KeyValuePair<int, IReadOnlyList<Bitmap>>> GetBitmapDictionary() {
             return null;
         }
 
