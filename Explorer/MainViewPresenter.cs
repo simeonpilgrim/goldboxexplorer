@@ -115,7 +115,7 @@ namespace GoldBoxExplorer
             {
                 var whatHappened = String.Format("We're sorry but Gold Box Explorer encountered a problem with the file named \"{0}\".", CurrentFile);
                 var howUserAffected = "Unfortunately Gold Box Explorer is having some difficulty in displaying this file.";
-                var whatUserCanDo = "If the error persists, please consider logging an issue at http://goldbox.codeplex.com.";
+                var whatUserCanDo = "If the error persists, please consider logging an issue at https://github.com/simeonpilgrim/goldboxexplorer/issues.";
                 HandledExceptionManager.ShowDialog(whatHappened, howUserAffected, whatUserCanDo,
                     ex, MessageBoxButtons.OK, MessageBoxIcon.Hand, HandledExceptionManager.UserErrorDefaultButton.Default);
             }
